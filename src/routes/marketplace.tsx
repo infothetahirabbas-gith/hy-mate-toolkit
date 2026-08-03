@@ -96,20 +96,22 @@ function MarketplacePage() {
 
               <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Category
+                  Industry
                 </span>
-                {categories.map((item) => (
-                  <Button
-                    key={item}
-                    size="sm"
-                    variant={item === category ? "default" : "outline"}
-                    className="rounded-full"
-                    onClick={() => setCategory(item)}
-                  >
-                    {item}
-                  </Button>
-                ))}
+                <select
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value)}
+                  aria-label="Filter by industry"
+                  className="h-10 rounded-full border border-border bg-background px-4 text-sm font-medium"
+                >
+                  {categories.map((item) => (
+                    <option key={item} value={item}>
+                      {item === "All" ? "All industries" : item}
+                    </option>
+                  ))}
+                </select>
               </div>
+
 
               <div className="flex min-w-0 flex-wrap items-center gap-2">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">

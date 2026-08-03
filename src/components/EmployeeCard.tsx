@@ -19,37 +19,57 @@ export function EmployeeCard({ employee }: { employee: CatalogEmployee }) {
           <p className="truncate text-sm text-muted-foreground">{employee.role_title}</p>
         </div>
         <Badge variant="secondary" className="shrink-0 rounded-full font-normal">
-          {employee.category}
+          {employee.department}
         </Badge>
       </div>
 
-      <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{employee.tagline}</p>
+      {employee.personality.length > 0 ? (
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {employee.personality.slice(0, 4).map((trait) => (
+            <span
+              key={trait}
+              className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground"
+            >
+              {trait}
+            </span>
+          ))}
+        </div>
+      ) : null}
 
-      <ul className="mt-5 space-y-2">
-        {employee.features.slice(0, 3).map((feature) => (
-          <li key={feature} className="flex items-start gap-2 text-sm">
+      <ul className="mt-4 space-y-2">
+        {employee.skills.slice(0, 3).map((skill) => (
+          <li key={skill} className="flex items-start gap-2 text-sm">
             <Check className="mt-0.5 size-4 shrink-0 text-primary" />
-            <span className="text-foreground/80">{feature}</span>
+            <span className="text-foreground/80">{skill}</span>
           </li>
         ))}
       </ul>
 
-      <div className="mt-auto flex items-end justify-between gap-3 border-t border-border pt-5 [margin-block-start:1.5rem]">
-        <div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            From
-          </span>
+      <div className="mt-auto border-t border-border pt-5 [margin-block-start:1.5rem]">
+        <div className="flex items-end justify-between gap-3">
           <div>
-            <span className="text-2xl font-bold tracking-tight">${employee.price_monthly}</span>
-            <span className="text-sm text-muted-foreground">/mo</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              From
+            </span>
+            <div>
+              <span className="text-2xl font-bold tracking-tight">${employee.price_monthly}</span>
+              <span className="text-sm text-muted-foreground">/mo</span>
+            </div>
           </div>
         </div>
-        <Button asChild size="sm" variant="outline">
-          <Link to="/employees/$slug" params={{ slug: employee.slug }}>
-            View Employee
-            <ArrowRight />
-          </Link>
-        </Button>
+        <div className="mt-4 grid grid-cols-2 gap-2">
+          <Button asChild size="sm" variant="outline">
+            <Link to="/employees/$slug" params={{ slug: employee.slug }}>
+              View Profile
+            </Link>
+          </Button>
+          <Button asChild size="sm">
+            <Link to="/employees/$slug" params={{ slug: employee.slug }} hash="hire">
+              Hire
+              <ArrowRight />
+            </Link>
+          </Button>
+        </div>
       </div>
     </article>
   );

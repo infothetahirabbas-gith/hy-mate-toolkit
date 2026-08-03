@@ -24,6 +24,8 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
+import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
+import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
 import { Route as AuthenticatedWorkspaceSlugRouteImport } from './routes/_authenticated/workspace.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -101,6 +103,16 @@ const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   path: '/employees/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IndustriesIndexRoute = IndustriesIndexRouteImport.update({
+  id: '/industries/',
+  path: '/industries/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndustriesSlugRoute = IndustriesSlugRouteImport.update({
+  id: '/industries/$slug',
+  path: '/industries/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedWorkspaceSlugRoute =
   AuthenticatedWorkspaceSlugRouteImport.update({
     id: '/workspace/$slug',
@@ -123,6 +135,8 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
+  '/industries/$slug': typeof IndustriesSlugRoute
+  '/industries/': typeof IndustriesIndexRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesByTo {
@@ -140,6 +154,8 @@ export interface FileRoutesByTo {
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
+  '/industries/$slug': typeof IndustriesSlugRoute
+  '/industries': typeof IndustriesIndexRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesById {
@@ -159,6 +175,8 @@ export interface FileRoutesById {
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
+  '/industries/$slug': typeof IndustriesSlugRoute
+  '/industries/': typeof IndustriesIndexRoute
   '/_authenticated/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRouteTypes {
@@ -178,6 +196,8 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/employees/$slug'
+    | '/industries/$slug'
+    | '/industries/'
     | '/workspace/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -195,6 +215,8 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/employees/$slug'
+    | '/industries/$slug'
+    | '/industries'
     | '/workspace/$slug'
   id:
     | '__root__'
@@ -213,6 +235,8 @@ export interface FileRouteTypes {
     | '/_authenticated/reports'
     | '/_authenticated/settings'
     | '/employees/$slug'
+    | '/industries/$slug'
+    | '/industries/'
     | '/_authenticated/workspace/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -225,6 +249,8 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   EmployeesSlugRoute: typeof EmployeesSlugRoute
+  IndustriesSlugRoute: typeof IndustriesSlugRoute
+  IndustriesIndexRoute: typeof IndustriesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -334,6 +360,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployeesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/industries/': {
+      id: '/industries/'
+      path: '/industries'
+      fullPath: '/industries/'
+      preLoaderRoute: typeof IndustriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/industries/$slug': {
+      id: '/industries/$slug'
+      path: '/industries/$slug'
+      fullPath: '/industries/$slug'
+      preLoaderRoute: typeof IndustriesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/workspace/$slug': {
       id: '/_authenticated/workspace/$slug'
       path: '/workspace/$slug'
@@ -378,6 +418,8 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   EmployeesSlugRoute: EmployeesSlugRoute,
+  IndustriesSlugRoute: IndustriesSlugRoute,
+  IndustriesIndexRoute: IndustriesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

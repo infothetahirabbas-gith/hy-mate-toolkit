@@ -1,6 +1,13 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+export type EmployeeReview = {
+  author: string;
+  title: string;
+  rating: number;
+  body: string;
+};
+
 export type CatalogEmployee = {
   id: string;
   slug: string;
@@ -15,6 +22,15 @@ export type CatalogEmployee = {
   accent: string;
   workspace_input_label: string;
   workspace_input_placeholder: string;
+  gender: string;
+  department: string;
+  main_responsibility: string;
+  personality: string[];
+  daily_tasks: string[];
+  business_benefits: string[];
+  target_customers: string[];
+  integrations: string[];
+  reviews: EmployeeReview[];
 };
 
 export const listEmployees = createServerFn({ method: "GET" }).handler(async () => {
@@ -26,7 +42,7 @@ export const listEmployees = createServerFn({ method: "GET" }).handler(async () 
     .order("sort_order", { ascending: true });
 
   if (error) throw new Error(error.message);
-  return (data ?? []) as CatalogEmployee[];
+  return (data ?? []) as unknown as CatalogEmployee[];
 });
 
 export const getEmployeeBySlug = createServerFn({ method: "GET" })
@@ -41,5 +57,5 @@ export const getEmployeeBySlug = createServerFn({ method: "GET" })
       .maybeSingle();
 
     if (error) throw new Error(error.message);
-    return (row as CatalogEmployee | null) ?? null;
+    return (row as unknown as CatalogEmployee | null) ?? null;
   });

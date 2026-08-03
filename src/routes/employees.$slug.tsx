@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight, Check, ListChecks, Plug, Sparkles, Star, Target } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,11 +34,46 @@ export const Route = createFileRoute("/employees/$slug")({
         { name: "description", content: employee.tagline },
         { property: "og:title", content: title },
         { property: "og:description", content: employee.tagline },
+        { property: "og:type", content: "profile" },
+        { name: "twitter:card", content: "summary_large_image" },
       ],
     };
   },
+  errorComponent: ({ error }) => (
+    <div role="alert" className="p-10 text-center text-sm text-muted-foreground">
+      {error.message}
+    </div>
+  ),
+  notFoundComponent: () => (
+    <div className="p-10 text-center text-sm text-muted-foreground">
+      That AI employee doesn’t exist.{" "}
+      <Link to="/marketplace" className="text-primary underline">
+        Browse the marketplace
+      </Link>
+    </div>
+  ),
   component: EmployeeDetailPage,
 });
+
+function Section({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: typeof Check;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-border bg-card p-7 shadow-soft">
+      <h2 className="flex items-center gap-2 text-lg font-bold tracking-tight">
+        <Icon className="size-4 text-primary" />
+        {title}
+      </h2>
+      <div className="mt-4">{children}</div>
+    </section>
+  );
+}
 
 function EmployeeDetailPage() {
   const { employee } = Route.useLoaderData();
@@ -68,11 +103,20 @@ function EmployeeDetailPage() {
           <div className="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-16 lg:flex-row lg:items-start">
             <div className="flex-1">
               <div className="flex items-center gap-4">
-                <EmployeeAvatar name={detail.name} accent={detail.accent} className="size-16 text-xl" />
+                <EmployeeAvatar
+                  name={detail.name}
+                  accent={detail.accent}
+                  className="size-16 text-xl"
+                />
                 <div>
-                  <Badge variant="secondary" className="rounded-full">
-                    {detail.category}
-                  </Badge>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary" className="rounded-full">
+                      {detail.category}
+                    </Badge>
+                    <Badge variant="outline" className="rounded-full font-normal">
+                      {detail.department}
+                    </Badge>
+                  </div>
                   <h1 className="mt-2 text-3xl font-extrabold tracking-tighter sm:text-4xl">
                     {detail.name}
                   </h1>
@@ -84,28 +128,51 @@ function EmployeeDetailPage() {
                 {detail.description}
               </p>
 
-              <div className="mt-6 flex flex-wrap gap-2">
-                {detail.skills.map((skill) => (
-                  <span
-                    key={skill}
-                    className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground"
-                  >
-                    {skill}
-                  </span>
-                ))}
+              {detail.personality.length > 0 ? (
+                <div className="mt-6">
+                  <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                    Personality
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {detail.personality.map((trait) => (
+                      <span
+                        key={trait}
+                        className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary"
+                      >
+                        {trait}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="mt-5">
+                <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Skills
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {detail.skills.map((skill) => (
+                    <span
+                      key={skill}
+                      className="rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
 
-            <aside className="w-full rounded-2xl border border-border bg-card p-7 shadow-lift lg:w-80">
+            <aside
+              id="hire"
+              className="w-full scroll-mt-24 rounded-2xl border border-border bg-card p-7 shadow-lift lg:w-80"
+            >
               <div className="flex items-baseline gap-1">
                 <span className="text-4xl font-extrabold tracking-tight">
                   ${detail.price_monthly}
                 </span>
                 <span className="text-sm text-muted-foreground">/month</span>
               </div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Cancel or pause this seat at any time.
-              </p>
 
               <div className="mt-6 space-y-2">
                 <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
@@ -136,7 +203,7 @@ function EmployeeDetailPage() {
                   disabled={hire.isPending}
                   onClick={() => hire.mutate()}
                 >
-                  {hire.isPending ? "Processing…" : `Checkout · Hire ${detail.name}`}
+                  {hire.isPending ? "Processing…" : `Hire ${detail.name}`}
                   <ArrowRight />
                 </Button>
               ) : (
@@ -148,11 +215,15 @@ function EmployeeDetailPage() {
                 </Button>
               )}
 
+              <p className="mt-3 text-center text-xs text-muted-foreground">
+                Cancel any time. No contracts.
+              </p>
+
               <ul className="mt-6 space-y-2.5 border-t border-border pt-6">
-                {detail.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-sm">
+                {detail.business_benefits.map((benefit) => (
+                  <li key={benefit} className="flex items-start gap-2 text-sm">
                     <Check className="mt-0.5 size-4 shrink-0 text-accent" />
-                    <span className="text-foreground/80">{feature}</span>
+                    <span className="text-foreground/80">{benefit}</span>
                   </li>
                 ))}
               </ul>
@@ -160,7 +231,66 @@ function EmployeeDetailPage() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-6xl px-5 py-16">
+        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-14 lg:grid-cols-2">
+          <Section icon={ListChecks} title="Daily tasks">
+            <ul className="space-y-2.5">
+              {detail.daily_tasks.map((task) => (
+                <li key={task} className="flex items-start gap-2 text-sm">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span className="text-foreground/80">{task}</span>
+                </li>
+              ))}
+            </ul>
+          </Section>
+
+          <Section icon={Target} title="Who this AI employee is for">
+            <ul className="space-y-2.5">
+              {detail.target_customers.map((customer) => (
+                <li key={customer} className="flex items-start gap-2 text-sm">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                  <span className="text-foreground/80">{customer}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-5 rounded-xl bg-muted p-4 text-sm leading-relaxed text-muted-foreground">
+              <span className="font-semibold text-foreground">Main responsibility: </span>
+              {detail.main_responsibility}
+            </p>
+          </Section>
+
+          <Section icon={Plug} title="Integrations">
+            <div className="flex flex-wrap gap-2">
+              {detail.integrations.map((tool) => (
+                <span
+                  key={tool}
+                  className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground/80"
+                >
+                  {tool}
+                </span>
+              ))}
+            </div>
+          </Section>
+
+          <Section icon={Star} title="Customer reviews">
+            <div className="space-y-4">
+              {detail.reviews.map((review) => (
+                <div key={review.author} className="rounded-xl border border-border p-4">
+                  <div className="flex items-center gap-1 text-amber-500">
+                    {Array.from({ length: review.rating }).map((_, index) => (
+                      <Star key={index} className="size-3.5 fill-current" />
+                    ))}
+                  </div>
+                  <p className="mt-2 text-sm leading-relaxed text-foreground/80">“{review.body}”</p>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {review.author} · {review.title}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Section>
+        </div>
+
+        <section className="mx-auto max-w-6xl px-5 pb-16">
           <div className="rounded-2xl border border-border bg-card p-8 shadow-soft">
             <div className="flex items-center gap-2 text-sm font-semibold text-primary">
               <Sparkles className="size-4" />
@@ -174,9 +304,14 @@ function EmployeeDetailPage() {
               something like “{detail.workspace_input_placeholder}” and receive a structured summary,
               key metrics, findings, opportunities and a prioritised action plan.
             </p>
-            <Button asChild variant="outline" className="mt-6">
-              <Link to="/marketplace">See other specialists</Link>
-            </Button>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button asChild variant="outline">
+                <Link to="/marketplace">See other specialists</Link>
+              </Button>
+              <Button asChild variant="ghost">
+                <Link to="/industries">Browse by industry</Link>
+              </Button>
+            </div>
           </div>
         </section>
       </main>
