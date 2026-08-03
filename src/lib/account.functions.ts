@@ -6,6 +6,10 @@ export type MySubscription = {
   id: string;
   status: string;
   plan: string;
+  plan_name: string;
+  amount: number;
+  billing_cycle: string;
+  start_date: string;
   price_monthly: number;
   subscription_date: string;
   employee: {
@@ -23,6 +27,12 @@ export type MySubscription = {
   tasks_completed: number;
 };
 
+const PLAN_NAMES: Record<string, string> = {
+  starter: "Starter",
+  professional: "Professional",
+  business: "Business",
+};
+
 const EMPLOYEE_JOIN =
   "employee:ai_employees(id, slug, name, role_title, category, tagline, accent, features, workspace_input_label, workspace_input_placeholder)";
 
@@ -34,7 +44,7 @@ export const getMySubscriptions = createServerFn({ method: "GET" })
     const [{ data: subs, error }, { data: tasks }] = await Promise.all([
       supabase
         .from("user_subscriptions")
-        .select(`id, status, plan, price_monthly, subscription_date, ${EMPLOYEE_JOIN}`)
+        .select(`id, status, plan, plan_name, amount, billing_cycle, start_date, price_monthly, subscription_date, ${EMPLOYEE_JOIN}`)
         .eq("user_id", userId)
         .order("subscription_date", { ascending: false }),
       supabase.from("ai_tasks").select("employee_id, status").eq("user_id", userId),
@@ -113,7 +123,14 @@ export const getDashboardOverview = createServerFn({ method: "GET" })
 
 export const hireEmployee = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ slug: z.string().min(1).max(120) }).parse(input))
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        slug: z.string().min(1).max(120),
+        plan: z.enum(["starter", "professional", "business"]).default("starter"),
+      })
+      .parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -132,7 +149,13 @@ export const hireEmployee = createServerFn({ method: "POST" })
         user_id: userId,
         employee_id: employee.id,
         status: "active",
+        plan: data.plan,
+        plan_name: PLAN_NAMES[data.plan],
         price_monthly: employee.price_monthly,
+        amount: employee.price_monthly,
+        billing_cycle: "monthly",
+        start_date: new Date().toISOString(),
+        end_date: null,
         cancelled_at: null,
         subscription_date: new Date().toISOString(),
       },
@@ -195,6 +218,8 @@ const businessSchema = z.object({
   country: z.string().trim().max(120).default(""),
   goals: z.string().trim().max(800).default(""),
   brand_info: z.string().trim().max(800).default(""),
+  target_audience: z.string().trim().max(600).default(""),
+  primary_goal: z.string().trim().max(60).default(""),
 });
 
 export const saveBusinessProfile = createServerFn({ method: "POST" })
@@ -231,6 +256,8 @@ export const updateMyProfile = createServerFn({ method: "POST" })
         name: z.string().trim().max(120).default(""),
         company: z.string().trim().max(120).default(""),
         industry: z.string().trim().max(120).default(""),
+        company_website: z.string().trim().max(200).default(""),
+        country: z.string().trim().max(120).default(""),
       })
       .parse(input),
   )
