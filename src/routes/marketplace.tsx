@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { EmployeeCard } from "@/components/EmployeeCard";
-import { employeesQuery } from "@/lib/queries";
+import { categoriesQuery, employeesQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/marketplace")({
   loader: ({ context }) => context.queryClient.ensureQueryData(employeesQuery),
