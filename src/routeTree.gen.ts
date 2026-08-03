@@ -21,6 +21,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedMyEmployeesRouteImport } from './routes/_authenticated/my-employees'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as AuthenticatedWorkspaceSlugRouteImport } from './routes/_authenticated/workspace.$slug'
 
@@ -84,6 +85,11 @@ const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   id: '/employees/$slug',
   path: '/employees/$slug',
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/reports': typeof AuthenticatedReportsRoute
+  '/settings': typeof AuthenticatedSettingsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/_authenticated/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/_authenticated/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/my-employees'
     | '/onboarding'
     | '/reports'
+    | '/settings'
     | '/employees/$slug'
     | '/workspace/$slug'
   fileRoutesByTo: FileRoutesByTo
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/my-employees'
     | '/onboarding'
     | '/reports'
+    | '/settings'
     | '/employees/$slug'
     | '/workspace/$slug'
   id:
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/_authenticated/my-employees'
     | '/_authenticated/onboarding'
     | '/_authenticated/reports'
+    | '/_authenticated/settings'
     | '/employees/$slug'
     | '/_authenticated/workspace/$slug'
   fileRoutesById: FileRoutesById
@@ -289,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/employees/$slug': {
       id: '/employees/$slug'
       path: '/employees/$slug'
@@ -312,6 +331,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMyEmployeesRoute: typeof AuthenticatedMyEmployeesRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedWorkspaceSlugRoute: typeof AuthenticatedWorkspaceSlugRoute
 }
 
@@ -321,6 +341,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedMyEmployeesRoute: AuthenticatedMyEmployeesRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedWorkspaceSlugRoute: AuthenticatedWorkspaceSlugRoute,
 }
 
