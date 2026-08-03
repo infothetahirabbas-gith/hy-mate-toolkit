@@ -70,7 +70,106 @@ function AdminPage() {
               </div>
             ))}
           </section>
+
+          <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+            <h2 className="border-b border-border p-5 text-sm font-semibold">AI employees</h2>
+            {data.employees.map((employee) => (
+              <div
+                key={employee.id}
+                className="flex flex-wrap items-center gap-3 border-b border-border p-4 text-sm last:border-b-0"
+              >
+                <span className="min-w-0 flex-1 truncate font-medium">{employee.name}</span>
+                <span className="min-w-0 flex-1 truncate text-muted-foreground">
+                  {employee.role_title}
+                </span>
+                <span className="shrink-0 text-xs text-muted-foreground">{employee.category}</span>
+                <span className="shrink-0 text-xs">${employee.price_monthly}/mo</span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() =>
+                    toggleEmployee.mutate({ id: employee.id, is_active: !employee.is_active })
+                  }
+                  disabled={toggleEmployee.isPending}
+                >
+                  {employee.is_active ? "Deactivate" : "Activate"}
+                </Button>
+              </div>
+            ))}
+          </section>
+
+          <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+            <h2 className="border-b border-border p-5 text-sm font-semibold">Categories</h2>
+            {(categories ?? []).map((category) => (
+              <div
+                key={category.id}
+                className="flex items-center gap-3 border-b border-border p-4 text-sm last:border-b-0"
+              >
+                <span className="w-32 shrink-0 font-medium">{category.name}</span>
+                <span className="min-w-0 flex-1 truncate text-muted-foreground">
+                  {category.description}
+                </span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => removeCategory.mutate({ id: category.id })}
+                  disabled={removeCategory.isPending}
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <form
+              className="flex gap-2 p-4"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (!newCategory.trim()) return;
+                saveCategory.mutate({ name: newCategory.trim(), description: "", sort_order: 99 });
+              }}
+            >
+              <Input
+                value={newCategory}
+                onChange={(event) => setNewCategory(event.target.value)}
+                placeholder="New category name"
+                maxLength={60}
+              />
+              <Button type="submit" disabled={saveCategory.isPending}>
+                Add
+              </Button>
+            </form>
+          </section>
+
+          <section className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+            <h2 className="border-b border-border p-5 text-sm font-semibold">Subscriptions</h2>
+            {data.subscriptions.slice(0, 20).map((sub) => (
+              <div
+                key={sub.id}
+                className="flex flex-wrap items-center gap-3 border-b border-border p-4 text-sm last:border-b-0"
+              >
+                <span className="min-w-0 flex-1 truncate">
+                  {(sub.employee as { name?: string } | null)?.name ?? "—"}
+                </span>
+                <span className="shrink-0 text-xs text-muted-foreground">{sub.plan}</span>
+                <span className="shrink-0 text-xs">${sub.price_monthly}/mo</span>
+                <span className="shrink-0 text-xs font-medium">{sub.status}</span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled={updateSub.isPending}
+                  onClick={() =>
+                    updateSub.mutate({
+                      id: sub.id,
+                      status: sub.status === "active" ? "paused" : "active",
+                    })
+                  }
+                >
+                  {sub.status === "active" ? "Pause" : "Activate"}
+                </Button>
+              </div>
+            ))}
+          </section>
         </div>
+
       ) : null}
     </AppShell>
   );
