@@ -18,28 +18,34 @@ export type Database = {
         Row: {
           created_at: string
           description: string | null
+          icon: string | null
           id: string
           name: string
           slug: string
           sort_order: number
+          tagline: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           description?: string | null
+          icon?: string | null
           id?: string
           name: string
           slug: string
           sort_order?: number
+          tagline?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           description?: string | null
+          icon?: string | null
           id?: string
           name?: string
           slug?: string
           sort_order?: number
+          tagline?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -50,17 +56,25 @@ export type Database = {
           agent_configuration: Json
           available_tools: string[]
           avatar_url: string | null
+          business_benefits: string[]
           category: string
           category_id: string | null
           created_at: string
+          daily_tasks: string[]
+          department: string
           description: string
           features: string[]
+          gender: string
           id: string
+          integrations: string[]
           is_active: boolean
           knowledge_base: Json
+          main_responsibility: string
           name: string
           persona: string
+          personality: string[]
           price_monthly: number
+          reviews: Json
           role_title: string
           skills: string[]
           slug: string
@@ -68,6 +82,7 @@ export type Database = {
           status: string
           system_prompt: string | null
           tagline: string
+          target_customers: string[]
           updated_at: string
           workspace_input_label: string
           workspace_input_placeholder: string
@@ -77,17 +92,25 @@ export type Database = {
           agent_configuration?: Json
           available_tools?: string[]
           avatar_url?: string | null
+          business_benefits?: string[]
           category: string
           category_id?: string | null
           created_at?: string
+          daily_tasks?: string[]
+          department?: string
           description: string
           features?: string[]
+          gender?: string
           id?: string
+          integrations?: string[]
           is_active?: boolean
           knowledge_base?: Json
+          main_responsibility?: string
           name: string
           persona: string
+          personality?: string[]
           price_monthly: number
+          reviews?: Json
           role_title: string
           skills?: string[]
           slug: string
@@ -95,6 +118,7 @@ export type Database = {
           status?: string
           system_prompt?: string | null
           tagline: string
+          target_customers?: string[]
           updated_at?: string
           workspace_input_label?: string
           workspace_input_placeholder?: string
@@ -104,17 +128,25 @@ export type Database = {
           agent_configuration?: Json
           available_tools?: string[]
           avatar_url?: string | null
+          business_benefits?: string[]
           category?: string
           category_id?: string | null
           created_at?: string
+          daily_tasks?: string[]
+          department?: string
           description?: string
           features?: string[]
+          gender?: string
           id?: string
+          integrations?: string[]
           is_active?: boolean
           knowledge_base?: Json
+          main_responsibility?: string
           name?: string
           persona?: string
+          personality?: string[]
           price_monthly?: number
+          reviews?: Json
           role_title?: string
           skills?: string[]
           slug?: string
@@ -122,6 +154,7 @@ export type Database = {
           status?: string
           system_prompt?: string | null
           tagline?: string
+          target_customers?: string[]
           updated_at?: string
           workspace_input_label?: string
           workspace_input_placeholder?: string
