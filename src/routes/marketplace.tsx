@@ -54,7 +54,7 @@ function MarketplacePage() {
         ]),
       ),
     ],
-    [employees],
+    [employees, categoryRows],
   );
 
   const priceFilter = PRICE_FILTERS.find((item) => item.label === price) ?? PRICE_FILTERS[0];
