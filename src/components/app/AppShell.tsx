@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NotificationBell } from "@/components/app/NotificationBell";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyProfile } from "@/lib/account.functions";
 import { cn } from "@/lib/utils";
@@ -146,7 +147,10 @@ export function AppShell({
               <p className="hidden truncate text-xs text-muted-foreground sm:block">{description}</p>
             ) : null}
           </div>
-          <div className="ml-auto flex items-center gap-2">{actions}</div>
+          <div className="ml-auto flex items-center gap-2">
+            {actions}
+            <NotificationBell />
+          </div>
         </header>
 
         <main className="flex-1 p-5 lg:p-8">
