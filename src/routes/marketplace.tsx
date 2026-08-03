@@ -29,20 +29,31 @@ export const Route = createFileRoute("/marketplace")({
   component: MarketplacePage,
 });
 
+const PRICE_FILTERS = [
+  { label: "Any price", test: () => true },
+  { label: "Under $50", test: (price: number) => price < 50 },
+  { label: "$50–$100", test: (price: number) => price >= 50 && price <= 100 },
+  { label: "Enterprise", test: (price: number) => price > 100 },
+] as const;
+
 function MarketplacePage() {
   const { data: employees } = useSuspenseQuery(employeesQuery);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("All");
+  const [price, setPrice] = useState("Any price");
 
   const categories = useMemo(
     () => ["All", ...Array.from(new Set(employees.map((e) => e.category)))],
     [employees],
   );
 
+  const priceFilter = PRICE_FILTERS.find((item) => item.label === price) ?? PRICE_FILTERS[0];
+
   const filtered = employees.filter((employee) => {
     const matchesCategory = category === "All" || employee.category === category;
+    const matchesPrice = priceFilter.test(employee.price_monthly);
     const haystack = `${employee.name} ${employee.role_title} ${employee.tagline}`.toLowerCase();
-    return matchesCategory && haystack.includes(query.trim().toLowerCase());
+    return matchesCategory && matchesPrice && haystack.includes(query.trim().toLowerCase());
   });
 
   return (
