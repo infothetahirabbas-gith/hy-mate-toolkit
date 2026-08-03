@@ -1,8 +1,19 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { AppShell } from "@/components/app/AppShell";
-import { getAdminOverview } from "@/lib/admin.functions";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  getAdminOverview,
+  adminListCategories,
+  adminSaveCategory,
+  adminDeleteCategory,
+  adminUpdateEmployee,
+  adminUpdateSubscription,
+} from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -18,10 +29,56 @@ export const Route = createFileRoute("/_authenticated/admin")({
 });
 
 function AdminPage() {
+  const queryClient = useQueryClient();
+  const [newCategory, setNewCategory] = useState("");
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-overview"],
     queryFn: () => getAdminOverview(),
     retry: false,
+  });
+
+  const { data: categories } = useQuery({
+    queryKey: ["admin-categories"],
+    queryFn: () => adminListCategories(),
+    retry: false,
+  });
+
+  const refresh = () => {
+    queryClient.invalidateQueries({ queryKey: ["admin-overview"] });
+    queryClient.invalidateQueries({ queryKey: ["admin-categories"] });
+    queryClient.invalidateQueries({ queryKey: ["employees"] });
+    queryClient.invalidateQueries({ queryKey: ["categories"] });
+  };
+  const onError = (err: Error) => toast.error(err.message);
+
+  const toggleEmployee = useMutation({
+    mutationFn: (input: { id: string; is_active: boolean }) => adminUpdateEmployee({ data: input }),
+    onSuccess: refresh,
+    onError,
+  });
+
+  const saveCategory = useMutation({
+    mutationFn: (input: { name: string; description: string; sort_order: number }) =>
+      adminSaveCategory({ data: input }),
+    onSuccess: () => {
+      setNewCategory("");
+      refresh();
+    },
+    onError,
+  });
+
+  const removeCategory = useMutation({
+    mutationFn: (input: { id: string }) => adminDeleteCategory({ data: input }),
+    onSuccess: refresh,
+    onError,
+  });
+
+  const updateSub = useMutation({
+    mutationFn: (input: { id: string; status: "active" | "paused" | "cancelled" }) =>
+      adminUpdateSubscription({ data: input }),
+    onSuccess: refresh,
+    onError,
   });
 
   return (
