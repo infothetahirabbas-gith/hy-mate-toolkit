@@ -83,16 +83,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Hire AI employees for marketing, sales and support. Activate an AI worker in minutes and get real deliverables every month.",
+          "Hire AI employees for SEO, content, ads and support on a monthly subscription. Onboard your business once and get real deliverables in minutes.",
       },
-      { property: "og:title", content: "Hire AI Employees For Your Business" },
+      { property: "og:title", content: "AI Employee Marketplace — Hire AI Employees For Your Business" },
       {
         property: "og:description",
         content:
-          "Automate marketing, sales, support and operations with AI workers trained for your business.",
+          "Hire AI employees for SEO, content, ads and support on a monthly subscription. Onboard your business once and get real deliverables in minutes.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "AI Employee Marketplace — Hire AI Employees For Your Business" },
+      { name: "twitter:description", content: "Hire AI employees for SEO, content, ads and support on a monthly subscription. Onboard your business once and get real deliverables in minutes." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

@@ -29,11 +29,11 @@ export const Route = createFileRoute("/")({
         content:
           "Hire AI employees for SEO, content, ads and support on a monthly subscription. Onboard your business once and get real deliverables in minutes.",
       },
-      { property: "og:title", content: "Hire AI Employees For Your Business" },
+      { property: "og:title", content: "AI Employee Marketplace — Hire AI Employees For Your Business" },
       {
         property: "og:description",
         content:
-          "A marketplace of AI workers for SEO, content, ads, support and operations. Hire in minutes, no headcount required.",
+          "Hire AI employees for SEO, content, ads and support on a monthly subscription. Onboard your business once and get real deliverables in minutes.",
       },
     ],
   }),
