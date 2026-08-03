@@ -42,8 +42,18 @@ function MarketplacePage() {
   const [category, setCategory] = useState("All");
   const [price, setPrice] = useState("Any price");
 
+  const { data: categoryRows } = useQuery(categoriesQuery);
+
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(employees.map((e) => e.category)))],
+    () => [
+      "All",
+      ...Array.from(
+        new Set([
+          ...(categoryRows ?? []).map((c) => c.name),
+          ...employees.map((e) => e.category),
+        ]),
+      ),
+    ],
     [employees],
   );
 
