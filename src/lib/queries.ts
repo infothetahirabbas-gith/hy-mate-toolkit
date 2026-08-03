@@ -16,6 +16,36 @@ import {
   getReports,
   getEmployeeActivity,
 } from "./account.functions";
+import {
+  getWorkforceOverview,
+  listWorkforceTasks,
+  listNotifications,
+  getActivationState,
+} from "./workforce.functions";
+
+export const workforceQuery = queryOptions({
+  queryKey: ["workforce"],
+  queryFn: () => getWorkforceOverview(),
+});
+
+export const workforceTasksQuery = queryOptions({
+  queryKey: ["workforce-tasks"],
+  queryFn: () => listWorkforceTasks(),
+});
+
+export const notificationsQuery = queryOptions({
+  queryKey: ["notifications"],
+  queryFn: () => listNotifications(),
+  refetchInterval: 60_000,
+});
+
+export const activationQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["activation", slug],
+    queryFn: () => getActivationState({ data: { slug } }),
+  });
+
+
 
 export const knowledgeQuery = queryOptions({
   queryKey: ["knowledge"],
