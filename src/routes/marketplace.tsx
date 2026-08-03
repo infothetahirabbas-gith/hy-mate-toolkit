@@ -1,13 +1,13 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { EmployeeCard } from "@/components/EmployeeCard";
-import { employeesQuery } from "@/lib/queries";
+import { categoriesQuery, employeesQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/marketplace")({
   loader: ({ context }) => context.queryClient.ensureQueryData(employeesQuery),
@@ -42,9 +42,19 @@ function MarketplacePage() {
   const [category, setCategory] = useState("All");
   const [price, setPrice] = useState("Any price");
 
+  const { data: categoryRows } = useQuery(categoriesQuery);
+
   const categories = useMemo(
-    () => ["All", ...Array.from(new Set(employees.map((e) => e.category)))],
-    [employees],
+    () => [
+      "All",
+      ...Array.from(
+        new Set([
+          ...(categoryRows ?? []).map((c) => c.name),
+          ...employees.map((e) => e.category),
+        ]),
+      ),
+    ],
+    [employees, categoryRows],
   );
 
   const priceFilter = PRICE_FILTERS.find((item) => item.label === price) ?? PRICE_FILTERS[0];

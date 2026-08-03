@@ -11,6 +11,7 @@ export const runEmployeeTask = createServerFn({ method: "POST" })
         slug: z.string().min(1).max(120),
         input: z.string().trim().min(3).max(1000),
         taskName: z.string().trim().max(120).default(""),
+        taskType: z.string().trim().max(60).default("general"),
       })
       .parse(input),
   )
@@ -58,6 +59,7 @@ export const runEmployeeTask = createServerFn({ method: "POST" })
         user_id: userId,
         employee_id: employee.id,
         task_name: taskName,
+        task_type: data.taskType,
         input: data.input,
         status: "running",
       })
@@ -102,6 +104,7 @@ export const runEmployeeTask = createServerFn({ method: "POST" })
         employee_id: employee.id,
         task_id: task.id,
         type: employee.category.toLowerCase(),
+        report_type: data.taskType,
         title: result.headline || taskName,
         summary: result.summary,
         content: JSON.parse(JSON.stringify(result)),

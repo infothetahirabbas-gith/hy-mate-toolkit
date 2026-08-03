@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { listEmployees, getEmployeeBySlug } from "./catalog.functions";
+import { listCategories } from "./categories.functions";
 import {
   getDashboardOverview,
   getMySubscriptions,
@@ -52,3 +53,9 @@ export const employeeActivityQuery = (slug: string) =>
     queryKey: ["employee-activity", slug],
     queryFn: () => getEmployeeActivity({ data: { slug } }),
   });
+
+export const categoriesQuery = queryOptions({
+  queryKey: ["categories"],
+  queryFn: () => listCategories(),
+  staleTime: 10 * 60 * 1000,
+});

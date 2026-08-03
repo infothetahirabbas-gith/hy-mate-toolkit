@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, Check, Sparkles } from "lucide-react";
@@ -11,6 +12,7 @@ import { employeeQuery } from "@/lib/queries";
 import type { CatalogEmployee } from "@/lib/catalog.functions";
 import { hireEmployee } from "@/lib/account.functions";
 import { useAuth } from "@/hooks/useAuth";
+import { PLANS } from "@/lib/plans";
 
 export const Route = createFileRoute("/employees/$slug")({
   loader: async ({ context, params }) => {
@@ -45,9 +47,10 @@ function EmployeeDetailPage() {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [plan, setPlan] = useState<"starter" | "professional" | "business">("starter");
 
   const hire = useMutation({
-    mutationFn: () => hireEmployee({ data: { slug: detail.slug } }),
+    mutationFn: () => hireEmployee({ data: { slug: detail.slug, plan } }),
     onSuccess: (result) => {
       queryClient.invalidateQueries();
       toast.success(`${detail.name} joined your team`);
@@ -104,6 +107,27 @@ function EmployeeDetailPage() {
                 Cancel or pause this seat at any time.
               </p>
 
+              <div className="mt-6 space-y-2">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                  Select a plan
+                </p>
+                {PLANS.map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setPlan(option.id as typeof plan)}
+                    className={`flex w-full items-center justify-between rounded-xl border px-3 py-2.5 text-left text-sm transition ${
+                      plan === option.id
+                        ? "border-primary bg-primary/5"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    <span className="font-medium">{option.name}</span>
+                    <span className="text-muted-foreground">${option.price}/mo</span>
+                  </button>
+                ))}
+              </div>
+
               {loading ? null : session ? (
                 <Button
                   variant="hero"
@@ -112,7 +136,7 @@ function EmployeeDetailPage() {
                   disabled={hire.isPending}
                   onClick={() => hire.mutate()}
                 >
-                  {hire.isPending ? "Hiring…" : `Hire ${detail.name}`}
+                  {hire.isPending ? "Processing…" : `Checkout · Hire ${detail.name}`}
                   <ArrowRight />
                 </Button>
               ) : (
