@@ -45,6 +45,7 @@ function AuthPage() {
 
   const [mode, setMode] = useState<"login" | "signup">(search.mode);
   const [name, setName] = useState("");
+  const [company, setCompany] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [pending, setPending] = useState(false);
@@ -75,7 +76,7 @@ function AuthPage() {
           password: parsed.data.password,
           options: {
             emailRedirectTo: `${window.location.origin}${destination}`,
-            data: { name: name.trim().slice(0, 120) },
+            data: { name: name.trim().slice(0, 120), company: company.trim().slice(0, 120) },
           },
         });
         if (error) throw error;
@@ -85,6 +86,8 @@ function AuthPage() {
           return;
         }
         toast.success("Workspace created");
+        navigate({ to: "/onboarding", replace: true });
+        return;
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,
