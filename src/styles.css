@@ -7,7 +7,7 @@
 /*
  * AI Employee Marketplace design system.
  * Premium B2B SaaS: warm paper background, deep ink surfaces,
- * electric blue primary, signal-green accent.
+ * deep violet primary (#5805C9), violet-magenta accent.
  * All colors are oklch semantic tokens. Never hardcode colors in components.
  */
 
@@ -85,9 +85,9 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.21 0.035 265);
 
-  --primary: oklch(0.623 0.188 259.8);
+  --primary: oklch(0.4324 0.2434 289.1);
   --primary-foreground: oklch(0.99 0.005 260);
-  --primary-soft: oklch(0.955 0.025 259.8);
+  --primary-soft: oklch(0.958 0.024 289.1);
 
   --secondary: oklch(0.962 0.006 253);
   --secondary-foreground: oklch(0.3 0.03 265);
@@ -95,9 +95,9 @@
   --muted: oklch(0.968 0.005 253);
   --muted-foreground: oklch(0.7 0.03 253);
 
-  --accent: oklch(0.62 0.15 258);
+  --accent: oklch(0.62 0.17 300);
   --accent-foreground: oklch(0.99 0.005 260);
-  --accent-soft: oklch(0.955 0.025 258);
+  --accent-soft: oklch(0.957 0.028 300);
 
   --destructive: oklch(0.58 0.22 27);
   --destructive-foreground: oklch(0.99 0.005 27);
@@ -113,7 +113,7 @@
 
   --border: oklch(0.935 0.008 250);
   --input: oklch(0.92 0.01 250);
-  --ring: oklch(0.623 0.188 259.8);
+  --ring: oklch(0.4324 0.2434 289.1);
 
   --chart-1: oklch(0.623 0.188 259.8);
   --chart-2: oklch(0.7 0.13 172);
@@ -123,12 +123,12 @@
 
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: oklch(0.21 0.035 265);
-  --sidebar-primary: oklch(0.623 0.188 259.8);
+  --sidebar-primary: oklch(0.4324 0.2434 289.1);
   --sidebar-primary-foreground: oklch(0.99 0.005 260);
   --sidebar-accent: oklch(0.968 0.005 253);
   --sidebar-accent-foreground: oklch(0.21 0.035 265);
   --sidebar-border: oklch(0.935 0.008 250);
-  --sidebar-ring: oklch(0.623 0.188 259.8);
+  --sidebar-ring: oklch(0.4324 0.2434 289.1);
 
   --gradient-hero: radial-gradient(
       110% 80% at 50% -10%,
@@ -139,7 +139,7 @@
   --gradient-primary: linear-gradient(
     135deg,
     var(--primary) 0%,
-    color-mix(in oklab, var(--primary) 72%, oklch(0.45 0.16 275)) 100%
+    color-mix(in oklab, var(--primary) 70%, oklch(0.55 0.22 315)) 100%
   );
   --gradient-sheen: linear-gradient(
     120deg,
@@ -162,9 +162,9 @@
   --card-foreground: oklch(0.97 0.005 265);
   --popover: oklch(0.21 0.02 265);
   --popover-foreground: oklch(0.97 0.005 265);
-  --primary: oklch(0.66 0.17 260);
-  --primary-foreground: oklch(0.14 0.02 260);
-  --primary-soft: oklch(0.28 0.06 260);
+  --primary: oklch(0.62 0.21 289.1);
+  --primary-foreground: oklch(0.99 0.005 289);
+  --primary-soft: oklch(0.28 0.08 289);
   --secondary: oklch(0.26 0.02 265);
   --secondary-foreground: oklch(0.97 0.005 265);
   --muted: oklch(0.26 0.02 265);
@@ -174,7 +174,7 @@
   --accent-soft: oklch(0.28 0.05 172);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.66 0.17 260);
+  --ring: oklch(0.62 0.21 289.1);
 }
 
 @layer base {

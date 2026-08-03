@@ -4,6 +4,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   BarChart3,
   Bot,
+  Brain,
+  Gauge,
+
   CreditCard,
   FileText,
   LayoutDashboard,
@@ -28,8 +31,11 @@ const NAV = [
   { label: "Marketplace", to: "/marketplace", icon: Store },
   { label: "Tasks", to: "/tasks", icon: ListChecks },
   { label: "Reports", to: "/reports", icon: FileText },
+  { label: "Knowledge & Memory", to: "/knowledge", icon: Brain },
+  { label: "Performance", to: "/performance", icon: Gauge },
   { label: "Analytics", to: "/analytics", icon: BarChart3 },
   { label: "Billing", to: "/billing", icon: CreditCard },
+
   { label: "Integrations", to: "/integrations", icon: Plug },
   { label: "Settings", to: "/settings", icon: Settings },
 ] as const;

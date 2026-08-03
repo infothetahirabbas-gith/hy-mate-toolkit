@@ -7,7 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AppShell } from "@/components/app/AppShell";
+import { AgentChat } from "@/components/app/AgentChat";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmployeeAvatar } from "@/components/EmployeeAvatar";
+
 import { employeeQuery, employeeActivityQuery } from "@/lib/queries";
 import { runEmployeeTask } from "@/lib/ai.functions";
 import type { AiEmployeeResult } from "@/lib/ai-types";
@@ -74,8 +77,24 @@ function WorkspacePage() {
   return (
     <AppShell title={`${employee.name}'s workspace`} description={employee.role_title}>
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-        <div className="space-y-6">
+        <Tabs defaultValue="tasks" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="tasks">Tasks & briefing</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="chat" className="mt-0">
+            <AgentChat
+              slug={slug}
+              name={employee.name}
+              accent={employee.accent}
+              roleTitle={employee.role_title}
+            />
+          </TabsContent>
+
+          <TabsContent value="tasks" className="mt-0 space-y-6">
           <section className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+
             <label htmlFor="brief" className="text-sm font-semibold">
               {employee.workspace_input_label}
             </label>
@@ -135,7 +154,9 @@ function WorkspacePage() {
               )}
             </div>
           </section>
-        </div>
+          </TabsContent>
+        </Tabs>
+
 
         <aside className="space-y-4">
           <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
