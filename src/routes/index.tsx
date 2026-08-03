@@ -198,8 +198,48 @@ function HomePage() {
           </div>
         </section>
 
+        {/* Industries */}
+        <section className="border-t border-border bg-muted/40">
+          <div className="mx-auto max-w-6xl px-5 py-20">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div className="max-w-2xl">
+                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Industries we staff</h2>
+                <p className="mt-4 text-muted-foreground">
+                  Five specialists in every industry, trained on the work that industry actually does.
+                </p>
+              </div>
+              <Button asChild variant="outline">
+                <Link to="/industries">
+                  All industries
+                  <ArrowRight />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {categories.slice(0, 8).map((category) => (
+                <Link
+                  key={category.id}
+                  to="/industries/$slug"
+                  params={{ slug: category.slug }}
+                  className="group rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:border-primary/25 hover:shadow-lift"
+                >
+                  <h3 className="font-semibold">{category.name}</h3>
+                  <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">
+                    {category.tagline ?? category.description}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                    5 specialists
+                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Marketplace preview */}
-        <section className="border-y border-border bg-muted/40">
+        <section className="border-y border-border">
           <div className="mx-auto max-w-6xl px-5 py-20">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="max-w-2xl">
@@ -223,6 +263,40 @@ function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Testimonials */}
+        <section className="mx-auto max-w-6xl px-5 py-20">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Teams already running on AI staff
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Founders and operators using AI employees for the work they never had headcount for.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((item) => (
+              <figure
+                key={item.name}
+                className="flex h-full flex-col rounded-2xl border border-border bg-card p-7 shadow-soft"
+              >
+                <div className="flex gap-0.5 text-accent">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} className="size-4 fill-current" />
+                  ))}
+                </div>
+                <blockquote className="mt-5 flex-1 text-sm leading-relaxed text-foreground/85">
+                  “{item.quote}”
+                </blockquote>
+                <figcaption className="mt-6 border-t border-border pt-4 text-sm">
+                  <span className="font-semibold">{item.name}</span>
+                  <span className="block text-muted-foreground">{item.role}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
 
         {/* Benefits */}
         <section className="mx-auto max-w-6xl px-5 py-20">
