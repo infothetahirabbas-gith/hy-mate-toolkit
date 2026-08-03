@@ -52,34 +52,43 @@ export type Database = {
       agent_memories: {
         Row: {
           category: string
+          confidence: number
           content: string
           created_at: string
           employee_id: string | null
           id: string
           importance: number
           memory_type: string
+          source: string
+          status: string
           updated_at: string
           user_id: string
         }
         Insert: {
           category?: string
+          confidence?: number
           content: string
           created_at?: string
           employee_id?: string | null
           id?: string
           importance?: number
           memory_type?: string
+          source?: string
+          status?: string
           updated_at?: string
           user_id: string
         }
         Update: {
           category?: string
+          confidence?: number
           content?: string
           created_at?: string
           employee_id?: string | null
           id?: string
           importance?: number
           memory_type?: string
+          source?: string
+          status?: string
           updated_at?: string
           user_id?: string
         }
@@ -283,6 +292,147 @@ export type Database = {
           },
         ]
       }
+      ai_project_members: {
+        Row: {
+          contribution: Json | null
+          created_at: string
+          employee_id: string
+          id: string
+          project_id: string
+          project_role: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          contribution?: Json | null
+          created_at?: string
+          employee_id: string
+          id?: string
+          project_id: string
+          project_role?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          contribution?: Json | null
+          created_at?: string
+          employee_id?: string
+          id?: string
+          project_id?: string
+          project_role?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_project_members_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_project_members_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "ai_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_project_messages: {
+        Row: {
+          author: string
+          content: string
+          created_at: string
+          employee_id: string | null
+          id: string
+          kind: string
+          project_id: string
+          user_id: string
+        }
+        Insert: {
+          author?: string
+          content: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          kind?: string
+          project_id: string
+          user_id: string
+        }
+        Update: {
+          author?: string
+          content?: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          kind?: string
+          project_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_project_messages_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_project_messages_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "ai_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_projects: {
+        Row: {
+          created_at: string
+          description: string | null
+          due_date: string | null
+          final_output: Json | null
+          goal: string | null
+          id: string
+          name: string
+          progress: number
+          shared_knowledge: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          final_output?: Json | null
+          goal?: string | null
+          id?: string
+          name: string
+          progress?: number
+          shared_knowledge?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          final_output?: Json | null
+          goal?: string | null
+          id?: string
+          name?: string
+          progress?: number
+          shared_knowledge?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_tasks: {
         Row: {
           completed_at: string | null
@@ -294,11 +444,15 @@ export type Database = {
           id: string
           input: string | null
           priority: string
+          project_id: string | null
+          requires_approval: boolean
           result: Json | null
           status: string
+          steps: Json
           task_name: string
           task_type: string
           tools_required: string[]
+          tools_used: string[]
           updated_at: string
           user_id: string
         }
@@ -312,11 +466,15 @@ export type Database = {
           id?: string
           input?: string | null
           priority?: string
+          project_id?: string | null
+          requires_approval?: boolean
           result?: Json | null
           status?: string
+          steps?: Json
           task_name: string
           task_type?: string
           tools_required?: string[]
+          tools_used?: string[]
           updated_at?: string
           user_id: string
         }
@@ -330,11 +488,15 @@ export type Database = {
           id?: string
           input?: string | null
           priority?: string
+          project_id?: string | null
+          requires_approval?: boolean
           result?: Json | null
           status?: string
+          steps?: Json
           task_name?: string
           task_type?: string
           tools_required?: string[]
+          tools_used?: string[]
           updated_at?: string
           user_id?: string
         }
@@ -344,6 +506,13 @@ export type Database = {
             columns: ["employee_id"]
             isOneToOne: false
             referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_tasks_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "ai_projects"
             referencedColumns: ["id"]
           },
         ]
@@ -479,6 +648,44 @@ export type Database = {
           },
         ]
       }
+      employee_tool_permissions: {
+        Row: {
+          created_at: string
+          employee_id: string
+          id: string
+          permission: string
+          tool_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: string
+          id?: string
+          permission?: string
+          tool_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string
+          id?: string
+          permission?: string
+          tool_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_tool_permissions_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_documents: {
         Row: {
           content: string
@@ -522,6 +729,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      memory_settings: {
+        Row: {
+          auto_save: boolean
+          created_at: string
+          require_approval: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_save?: boolean
+          created_at?: string
+          require_approval?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_save?: boolean
+          created_at?: string
+          require_approval?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       notifications: {
         Row: {
@@ -745,6 +976,64 @@ export type Database = {
           },
         ]
       }
+      tool_activity_logs: {
+        Row: {
+          action: string
+          created_at: string
+          employee_id: string | null
+          id: string
+          outcome: string
+          project_id: string | null
+          task_id: string | null
+          tool_id: string
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          outcome?: string
+          project_id?: string | null
+          task_id?: string | null
+          tool_id: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          outcome?: string
+          project_id?: string | null
+          task_id?: string | null
+          tool_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tool_activity_logs_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tool_activity_logs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "ai_projects"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tool_activity_logs_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_integrations: {
         Row: {
           account_label: string | null
@@ -875,6 +1164,86 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      workflow_runs: {
+        Row: {
+          created_at: string
+          id: string
+          log: Json
+          status: string
+          user_id: string
+          workflow_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          log?: Json
+          status?: string
+          user_id: string
+          workflow_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          log?: Json
+          status?: string
+          user_id?: string
+          workflow_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_runs_workflow_id_fkey"
+            columns: ["workflow_id"]
+            isOneToOne: false
+            referencedRelation: "workflows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workflows: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          last_run_at: string | null
+          name: string
+          run_count: number
+          status: string
+          steps: Json
+          trigger_config: Json
+          trigger_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_run_at?: string | null
+          name: string
+          run_count?: number
+          status?: string
+          steps?: Json
+          trigger_config?: Json
+          trigger_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          last_run_at?: string | null
+          name?: string
+          run_count?: number
+          status?: string
+          steps?: Json
+          trigger_config?: Json
+          trigger_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
