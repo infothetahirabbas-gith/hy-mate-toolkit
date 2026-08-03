@@ -31,6 +31,7 @@ import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
+import { Route as AuthenticatedActivateSlugRouteImport } from './routes/_authenticated/activate.$slug'
 import { Route as AuthenticatedWorkspaceSlugRouteImport } from './routes/_authenticated/workspace.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -145,6 +146,12 @@ const IndustriesSlugRoute = IndustriesSlugRouteImport.update({
   path: '/industries/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedActivateSlugRoute =
+  AuthenticatedActivateSlugRouteImport.update({
+    id: '/activate/$slug',
+    path: '/activate/$slug',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedWorkspaceSlugRoute =
   AuthenticatedWorkspaceSlugRouteImport.update({
     id: '/workspace/$slug',
@@ -174,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries/': typeof IndustriesIndexRoute
+  '/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesByTo {
@@ -198,6 +206,7 @@ export interface FileRoutesByTo {
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries': typeof IndustriesIndexRoute
+  '/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesById {
@@ -224,6 +233,7 @@ export interface FileRoutesById {
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries/': typeof IndustriesIndexRoute
+  '/_authenticated/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/_authenticated/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRouteTypes {
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries/'
+    | '/activate/$slug'
     | '/workspace/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -274,6 +285,7 @@ export interface FileRouteTypes {
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries'
+    | '/activate/$slug'
     | '/workspace/$slug'
   id:
     | '__root__'
@@ -299,6 +311,7 @@ export interface FileRouteTypes {
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries/'
+    | '/_authenticated/activate/$slug'
     | '/_authenticated/workspace/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -471,6 +484,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndustriesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/activate/$slug': {
+      id: '/_authenticated/activate/$slug'
+      path: '/activate/$slug'
+      fullPath: '/activate/$slug'
+      preLoaderRoute: typeof AuthenticatedActivateSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/workspace/$slug': {
       id: '/_authenticated/workspace/$slug'
       path: '/workspace/$slug'
@@ -494,6 +514,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
+  AuthenticatedActivateSlugRoute: typeof AuthenticatedActivateSlugRoute
   AuthenticatedWorkspaceSlugRoute: typeof AuthenticatedWorkspaceSlugRoute
 }
 
@@ -510,6 +531,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
+  AuthenticatedActivateSlugRoute: AuthenticatedActivateSlugRoute,
   AuthenticatedWorkspaceSlugRoute: AuthenticatedWorkspaceSlugRoute,
 }
 
