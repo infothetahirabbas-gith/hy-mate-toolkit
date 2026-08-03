@@ -100,7 +100,7 @@ function TeamsPage() {
     <AppShell
       title="AI Team Projects"
       description="Assign several AI employees to one goal and let them work together"
-      action={
+      actions={
         <Dialog open={creating} onOpenChange={setCreating}>
           <DialogTrigger asChild>
             <Button variant="hero">
