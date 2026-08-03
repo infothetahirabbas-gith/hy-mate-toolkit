@@ -9,6 +9,7 @@ import {
   Rocket,
   ShieldCheck,
   Sparkles,
+  Star,
   Workflow,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,16 @@ import { Badge } from "@/components/ui/badge";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { EmployeeCard } from "@/components/EmployeeCard";
-import { employeesQuery } from "@/lib/queries";
+import { employeesQuery, categoriesQuery } from "@/lib/queries";
 import { PLANS } from "@/lib/plans";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(employeesQuery),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(employeesQuery),
+      context.queryClient.ensureQueryData(categoriesQuery),
+    ]),
+
   head: () => ({
     meta: [
       { title: "AI Employee Marketplace — Hire AI Employees For Your Business" },
@@ -103,9 +109,32 @@ const FAQS = [
   },
 ];
 
+const TESTIMONIALS = [
+  {
+    quote:
+      "We hired an AI SEO manager instead of an agency. Two months in, our organic traffic is up and we cancelled a $2,500 retainer.",
+    name: "Priya N.",
+    role: "Operations Lead, B2B SaaS",
+  },
+  {
+    quote:
+      "Onboarding took ten minutes. Every deliverable comes back in our brand voice, ready to publish.",
+    name: "James O.",
+    role: "Founder, Ecommerce",
+  },
+  {
+    quote:
+      "It feels like a real team member. I brief it in the morning and the report is waiting for me.",
+    name: "Daniel K.",
+    role: "Managing Director, Agency",
+  },
+];
+
 function HomePage() {
   const { data: employees } = useSuspenseQuery(employeesQuery);
+  const { data: categories } = useSuspenseQuery(categoriesQuery);
   const featured = employees.slice(0, 6);
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
