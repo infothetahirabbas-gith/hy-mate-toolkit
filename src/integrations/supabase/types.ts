@@ -14,15 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_employee_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_employees: {
         Row: {
           accent: string
+          agent_configuration: Json
+          available_tools: string[]
+          avatar_url: string | null
           category: string
+          category_id: string | null
           created_at: string
           description: string
           features: string[]
           id: string
           is_active: boolean
+          knowledge_base: Json
           name: string
           persona: string
           price_monthly: number
@@ -30,6 +65,8 @@ export type Database = {
           skills: string[]
           slug: string
           sort_order: number
+          status: string
+          system_prompt: string | null
           tagline: string
           updated_at: string
           workspace_input_label: string
@@ -37,12 +74,17 @@ export type Database = {
         }
         Insert: {
           accent?: string
+          agent_configuration?: Json
+          available_tools?: string[]
+          avatar_url?: string | null
           category: string
+          category_id?: string | null
           created_at?: string
           description: string
           features?: string[]
           id?: string
           is_active?: boolean
+          knowledge_base?: Json
           name: string
           persona: string
           price_monthly: number
@@ -50,6 +92,8 @@ export type Database = {
           skills?: string[]
           slug: string
           sort_order?: number
+          status?: string
+          system_prompt?: string | null
           tagline: string
           updated_at?: string
           workspace_input_label?: string
@@ -57,12 +101,17 @@ export type Database = {
         }
         Update: {
           accent?: string
+          agent_configuration?: Json
+          available_tools?: string[]
+          avatar_url?: string | null
           category?: string
+          category_id?: string | null
           created_at?: string
           description?: string
           features?: string[]
           id?: string
           is_active?: boolean
+          knowledge_base?: Json
           name?: string
           persona?: string
           price_monthly?: number
@@ -70,12 +119,22 @@ export type Database = {
           skills?: string[]
           slug?: string
           sort_order?: number
+          status?: string
+          system_prompt?: string | null
           tagline?: string
           updated_at?: string
           workspace_input_label?: string
           workspace_input_placeholder?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "ai_employees_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employee_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ai_tasks: {
         Row: {
@@ -88,6 +147,7 @@ export type Database = {
           result: Json | null
           status: string
           task_name: string
+          task_type: string
           user_id: string
         }
         Insert: {
@@ -100,6 +160,7 @@ export type Database = {
           result?: Json | null
           status?: string
           task_name: string
+          task_type?: string
           user_id: string
         }
         Update: {
@@ -112,6 +173,7 @@ export type Database = {
           result?: Json | null
           status?: string
           task_name?: string
+          task_type?: string
           user_id?: string
         }
         Relationships: [
@@ -132,6 +194,8 @@ export type Database = {
           created_at: string
           goals: string | null
           industry: string | null
+          primary_goal: string | null
+          target_audience: string | null
           target_customer: string | null
           updated_at: string
           user_id: string
@@ -144,6 +208,8 @@ export type Database = {
           created_at?: string
           goals?: string | null
           industry?: string | null
+          primary_goal?: string | null
+          target_audience?: string | null
           target_customer?: string | null
           updated_at?: string
           user_id: string
@@ -156,6 +222,8 @@ export type Database = {
           created_at?: string
           goals?: string | null
           industry?: string | null
+          primary_goal?: string | null
+          target_audience?: string | null
           target_customer?: string | null
           updated_at?: string
           user_id?: string
@@ -166,6 +234,8 @@ export type Database = {
       profiles: {
         Row: {
           company: string | null
+          company_website: string | null
+          country: string | null
           created_at: string
           email: string | null
           id: string
@@ -175,6 +245,8 @@ export type Database = {
         }
         Insert: {
           company?: string | null
+          company_website?: string | null
+          country?: string | null
           created_at?: string
           email?: string | null
           id: string
@@ -184,6 +256,8 @@ export type Database = {
         }
         Update: {
           company?: string | null
+          company_website?: string | null
+          country?: string | null
           created_at?: string
           email?: string | null
           id?: string
@@ -199,6 +273,7 @@ export type Database = {
           created_at: string
           employee_id: string | null
           id: string
+          report_type: string | null
           summary: string | null
           task_id: string | null
           title: string
@@ -210,6 +285,7 @@ export type Database = {
           created_at?: string
           employee_id?: string | null
           id?: string
+          report_type?: string | null
           summary?: string | null
           task_id?: string | null
           title: string
@@ -221,6 +297,7 @@ export type Database = {
           created_at?: string
           employee_id?: string | null
           id?: string
+          report_type?: string | null
           summary?: string | null
           task_id?: string | null
           title?: string
@@ -267,31 +344,46 @@ export type Database = {
       }
       user_subscriptions: {
         Row: {
+          amount: number
+          billing_cycle: string
           cancelled_at: string | null
           employee_id: string
+          end_date: string | null
           id: string
           plan: string
+          plan_name: string
           price_monthly: number
+          start_date: string
           status: string
           subscription_date: string
           user_id: string
         }
         Insert: {
+          amount?: number
+          billing_cycle?: string
           cancelled_at?: string | null
           employee_id: string
+          end_date?: string | null
           id?: string
           plan?: string
+          plan_name?: string
           price_monthly?: number
+          start_date?: string
           status?: string
           subscription_date?: string
           user_id: string
         }
         Update: {
+          amount?: number
+          billing_cycle?: string
           cancelled_at?: string | null
           employee_id?: string
+          end_date?: string | null
           id?: string
           plan?: string
+          plan_name?: string
           price_monthly?: number
+          start_date?: string
           status?: string
           subscription_date?: string
           user_id?: string
