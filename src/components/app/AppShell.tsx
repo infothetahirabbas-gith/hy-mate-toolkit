@@ -2,12 +2,15 @@ import { useState, type ReactNode } from "react";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
+  BarChart3,
   Bot,
   CreditCard,
   FileText,
   LayoutDashboard,
+  ListChecks,
   LogOut,
   Menu,
+  Plug,
   Settings,
   ShieldCheck,
   Store,
@@ -23,10 +26,14 @@ const NAV = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
   { label: "My AI Employees", to: "/my-employees", icon: Users },
   { label: "Marketplace", to: "/marketplace", icon: Store },
+  { label: "Tasks", to: "/tasks", icon: ListChecks },
   { label: "Reports", to: "/reports", icon: FileText },
+  { label: "Analytics", to: "/analytics", icon: BarChart3 },
   { label: "Billing", to: "/billing", icon: CreditCard },
+  { label: "Integrations", to: "/integrations", icon: Plug },
   { label: "Settings", to: "/settings", icon: Settings },
 ] as const;
+
 
 export function AppShell({
   title,
