@@ -22,12 +22,16 @@ import { Route as AuthenticatedBillingRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedIntegrationsRouteImport } from './routes/_authenticated/integrations'
 import { Route as AuthenticatedKnowledgeRouteImport } from './routes/_authenticated/knowledge'
+import { Route as AuthenticatedMemoryRouteImport } from './routes/_authenticated/memory'
 import { Route as AuthenticatedMyEmployeesRouteImport } from './routes/_authenticated/my-employees'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedPerformanceRouteImport } from './routes/_authenticated/performance'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
+import { Route as AuthenticatedTeamsRouteImport } from './routes/_authenticated/teams'
+import { Route as AuthenticatedToolsRouteImport } from './routes/_authenticated/tools'
+import { Route as AuthenticatedWorkflowsRouteImport } from './routes/_authenticated/workflows'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
@@ -99,6 +103,11 @@ const AuthenticatedKnowledgeRoute = AuthenticatedKnowledgeRouteImport.update({
   path: '/knowledge',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMemoryRoute = AuthenticatedMemoryRouteImport.update({
+  id: '/memory',
+  path: '/memory',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMyEmployeesRoute =
   AuthenticatedMyEmployeesRouteImport.update({
     id: '/my-employees',
@@ -129,6 +138,21 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
 const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
   id: '/tasks',
   path: '/tasks',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTeamsRoute = AuthenticatedTeamsRouteImport.update({
+  id: '/teams',
+  path: '/teams',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedToolsRoute = AuthenticatedToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedWorkflowsRoute = AuthenticatedWorkflowsRouteImport.update({
+  id: '/workflows',
+  path: '/workflows',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
@@ -172,12 +196,16 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/integrations': typeof AuthenticatedIntegrationsRoute
   '/knowledge': typeof AuthenticatedKnowledgeRoute
+  '/memory': typeof AuthenticatedMemoryRoute
   '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/performance': typeof AuthenticatedPerformanceRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/teams': typeof AuthenticatedTeamsRoute
+  '/tools': typeof AuthenticatedToolsRoute
+  '/workflows': typeof AuthenticatedWorkflowsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries/': typeof IndustriesIndexRoute
@@ -197,12 +225,16 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/integrations': typeof AuthenticatedIntegrationsRoute
   '/knowledge': typeof AuthenticatedKnowledgeRoute
+  '/memory': typeof AuthenticatedMemoryRoute
   '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/performance': typeof AuthenticatedPerformanceRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/tasks': typeof AuthenticatedTasksRoute
+  '/teams': typeof AuthenticatedTeamsRoute
+  '/tools': typeof AuthenticatedToolsRoute
+  '/workflows': typeof AuthenticatedWorkflowsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries': typeof IndustriesIndexRoute
@@ -224,12 +256,16 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/integrations': typeof AuthenticatedIntegrationsRoute
   '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRoute
+  '/_authenticated/memory': typeof AuthenticatedMemoryRoute
   '/_authenticated/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/performance': typeof AuthenticatedPerformanceRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/tasks': typeof AuthenticatedTasksRoute
+  '/_authenticated/teams': typeof AuthenticatedTeamsRoute
+  '/_authenticated/tools': typeof AuthenticatedToolsRoute
+  '/_authenticated/workflows': typeof AuthenticatedWorkflowsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries/': typeof IndustriesIndexRoute
@@ -251,12 +287,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/integrations'
     | '/knowledge'
+    | '/memory'
     | '/my-employees'
     | '/onboarding'
     | '/performance'
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/teams'
+    | '/tools'
+    | '/workflows'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries/'
@@ -276,12 +316,16 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/integrations'
     | '/knowledge'
+    | '/memory'
     | '/my-employees'
     | '/onboarding'
     | '/performance'
     | '/reports'
     | '/settings'
     | '/tasks'
+    | '/teams'
+    | '/tools'
+    | '/workflows'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries'
@@ -302,12 +346,16 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/integrations'
     | '/_authenticated/knowledge'
+    | '/_authenticated/memory'
     | '/_authenticated/my-employees'
     | '/_authenticated/onboarding'
     | '/_authenticated/performance'
     | '/_authenticated/reports'
     | '/_authenticated/settings'
     | '/_authenticated/tasks'
+    | '/_authenticated/teams'
+    | '/_authenticated/tools'
+    | '/_authenticated/workflows'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries/'
@@ -421,6 +469,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKnowledgeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/memory': {
+      id: '/_authenticated/memory'
+      path: '/memory'
+      fullPath: '/memory'
+      preLoaderRoute: typeof AuthenticatedMemoryRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/my-employees': {
       id: '/_authenticated/my-employees'
       path: '/my-employees'
@@ -461,6 +516,27 @@ declare module '@tanstack/react-router' {
       path: '/tasks'
       fullPath: '/tasks'
       preLoaderRoute: typeof AuthenticatedTasksRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/teams': {
+      id: '/_authenticated/teams'
+      path: '/teams'
+      fullPath: '/teams'
+      preLoaderRoute: typeof AuthenticatedTeamsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tools': {
+      id: '/_authenticated/tools'
+      path: '/tools'
+      fullPath: '/tools'
+      preLoaderRoute: typeof AuthenticatedToolsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/workflows': {
+      id: '/_authenticated/workflows'
+      path: '/workflows'
+      fullPath: '/workflows'
+      preLoaderRoute: typeof AuthenticatedWorkflowsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/employees/$slug': {
@@ -508,12 +584,16 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedIntegrationsRoute: typeof AuthenticatedIntegrationsRoute
   AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRoute
+  AuthenticatedMemoryRoute: typeof AuthenticatedMemoryRoute
   AuthenticatedMyEmployeesRoute: typeof AuthenticatedMyEmployeesRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedPerformanceRoute: typeof AuthenticatedPerformanceRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
+  AuthenticatedTeamsRoute: typeof AuthenticatedTeamsRoute
+  AuthenticatedToolsRoute: typeof AuthenticatedToolsRoute
+  AuthenticatedWorkflowsRoute: typeof AuthenticatedWorkflowsRoute
   AuthenticatedActivateSlugRoute: typeof AuthenticatedActivateSlugRoute
   AuthenticatedWorkspaceSlugRoute: typeof AuthenticatedWorkspaceSlugRoute
 }
@@ -525,12 +605,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedIntegrationsRoute: AuthenticatedIntegrationsRoute,
   AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRoute,
+  AuthenticatedMemoryRoute: AuthenticatedMemoryRoute,
   AuthenticatedMyEmployeesRoute: AuthenticatedMyEmployeesRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedPerformanceRoute: AuthenticatedPerformanceRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTasksRoute: AuthenticatedTasksRoute,
+  AuthenticatedTeamsRoute: AuthenticatedTeamsRoute,
+  AuthenticatedToolsRoute: AuthenticatedToolsRoute,
+  AuthenticatedWorkflowsRoute: AuthenticatedWorkflowsRoute,
   AuthenticatedActivateSlugRoute: AuthenticatedActivateSlugRoute,
   AuthenticatedWorkspaceSlugRoute: AuthenticatedWorkspaceSlugRoute,
 }

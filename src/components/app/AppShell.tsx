@@ -13,6 +13,10 @@ import {
   ListChecks,
   LogOut,
   Menu,
+  Network,
+  Wrench,
+  Workflow,
+  BrainCircuit,
   Plug,
   Settings,
   ShieldCheck,
@@ -31,15 +35,19 @@ const NAV = [
   { label: "My AI Employees", to: "/my-employees", icon: Users },
   { label: "Marketplace", to: "/marketplace", icon: Store },
   { label: "Tasks", to: "/tasks", icon: ListChecks },
+  { label: "Team Projects", to: "/teams", icon: Network },
+  { label: "Workflows", to: "/workflows", icon: Workflow },
   { label: "Reports", to: "/reports", icon: FileText },
   { label: "Knowledge & Memory", to: "/knowledge", icon: Brain },
+  { label: "Memory Control", to: "/memory", icon: BrainCircuit },
   { label: "Performance", to: "/performance", icon: Gauge },
   { label: "Analytics", to: "/analytics", icon: BarChart3 },
   { label: "Billing", to: "/billing", icon: CreditCard },
-
+  { label: "Tool Registry", to: "/tools", icon: Wrench },
   { label: "Integrations", to: "/integrations", icon: Plug },
   { label: "Settings", to: "/settings", icon: Settings },
 ] as const;
+
 
 
 export function AppShell({
