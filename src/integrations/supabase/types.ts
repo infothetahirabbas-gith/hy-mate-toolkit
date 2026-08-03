@@ -14,6 +14,120 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_conversations: {
+        Row: {
+          created_at: string
+          employee_id: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_conversations_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_memories: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          employee_id: string | null
+          id: string
+          importance: number
+          memory_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          content: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          importance?: number
+          memory_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          importance?: number
+          memory_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_memories_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "agent_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_employee_categories: {
         Row: {
           created_at: string
@@ -264,6 +378,136 @@ export type Database = {
         }
         Relationships: []
       }
+      employee_performance: {
+        Row: {
+          created_at: string
+          day: string
+          employee_id: string
+          id: string
+          minutes_saved: number
+          reports_generated: number
+          tasks_completed: number
+          tasks_failed: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day?: string
+          employee_id: string
+          id?: string
+          minutes_saved?: number
+          reports_generated?: number
+          tasks_completed?: number
+          tasks_failed?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day?: string
+          employee_id?: string
+          id?: string
+          minutes_saved?: number
+          reports_generated?: number
+          tasks_completed?: number
+          tasks_failed?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_performance_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      employee_skills: {
+        Row: {
+          created_at: string
+          employee_id: string
+          id: string
+          proficiency: string
+          skill_id: string
+        }
+        Insert: {
+          created_at?: string
+          employee_id: string
+          id?: string
+          proficiency?: string
+          skill_id: string
+        }
+        Update: {
+          created_at?: string
+          employee_id?: string
+          id?: string
+          proficiency?: string
+          skill_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "employee_skills_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "employee_skills_skill_id_fkey"
+            columns: ["skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_documents: {
+        Row: {
+          content: string
+          created_at: string
+          doc_type: string
+          employee_id: string | null
+          id: string
+          source_url: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          doc_type?: string
+          employee_id?: string | null
+          id?: string
+          source_url?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          doc_type?: string
+          employee_id?: string | null
+          id?: string
+          source_url?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_documents_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           company: string | null
@@ -347,6 +591,87 @@ export type Database = {
           },
           {
             foreignKeyName: "reports_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skills: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          difficulty: string
+          id: string
+          name: string
+          required_tools: string[]
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty?: string
+          id?: string
+          name: string
+          required_tools?: string[]
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty?: string
+          id?: string
+          name?: string
+          required_tools?: string[]
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      task_feedback: {
+        Row: {
+          correction: string | null
+          created_at: string
+          employee_id: string
+          id: string
+          rating: number
+          task_id: string | null
+          user_id: string
+        }
+        Insert: {
+          correction?: string | null
+          created_at?: string
+          employee_id: string
+          id?: string
+          rating?: number
+          task_id?: string | null
+          user_id: string
+        }
+        Update: {
+          correction?: string | null
+          created_at?: string
+          employee_id?: string
+          id?: string
+          rating?: number
+          task_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_feedback_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_feedback_task_id_fkey"
             columns: ["task_id"]
             isOneToOne: false
             referencedRelation: "ai_tasks"
