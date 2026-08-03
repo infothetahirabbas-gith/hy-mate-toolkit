@@ -113,31 +113,38 @@ function HomePage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden">
+        <section className="relative overflow-hidden border-b border-border">
           <div className="pointer-events-none absolute inset-0 bg-hero" aria-hidden="true" />
           <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-20 lg:pb-28 lg:pt-28">
-            <div className="mx-auto max-w-3xl text-center animate-rise">
-              <Badge variant="outline" className="rounded-full border-primary/30 bg-primary/5 px-4 py-1.5 text-primary">
-                <Sparkles className="mr-1.5 size-3.5" />
+            <div className="mx-auto max-w-4xl text-center animate-rise">
+              <span className="inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary-soft px-3 py-1 text-sm font-medium tracking-tight text-primary">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex size-2 rounded-full bg-primary" />
+                </span>
                 Now hiring: 6 AI specialists
-              </Badge>
-              <h1 className="mt-6 text-balance text-4xl font-extrabold leading-[1.05] tracking-tighter sm:text-6xl">
-                Hire AI employees for your business
+              </span>
+
+              <h1 className="mt-6 text-balance text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
+                Hire AI employees for{" "}
+                <span className="text-primary">your business.</span>
               </h1>
-              <p className="mx-auto mt-6 max-w-2xl text-pretty text-lg leading-relaxed text-muted-foreground">
-                Marketing, content, ads, support and operations — staffed by AI workers that already
-                know your business. Subscribe monthly, brief them like teammates, get deliverables in
-                minutes.
+              <p className="mx-auto mt-6 max-w-2xl text-pretty text-xl leading-relaxed text-muted-foreground">
+                Your digital workforce for marketing, sales, support and operations — AI specialists
+                that already know your business and deliver in minutes.
               </p>
-              <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+
+              <div className="mt-9 flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row">
                 <Button asChild size="xl" variant="hero">
-                  <Link to="/auth" search={{ mode: "signup" }}>
-                    Start free trial
+                  <Link to="/marketplace">
+                    Browse AI Employees
                     <ArrowRight />
                   </Link>
                 </Button>
                 <Button asChild size="xl" variant="outline">
-                  <Link to="/marketplace">Browse marketplace</Link>
+                  <Link to="/auth" search={{ mode: "signup" }}>
+                    Start Free Trial
+                  </Link>
                 </Button>
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
@@ -145,7 +152,7 @@ function HomePage() {
               </p>
             </div>
 
-            <div className="mt-16 grid gap-4 sm:grid-cols-3">
+            <div className="mt-16 grid gap-6 sm:grid-cols-3">
               {[
                 { value: "6", label: "AI specialists available" },
                 { value: "< 5 min", label: "From signup to first deliverable" },
@@ -153,9 +160,11 @@ function HomePage() {
               ].map((stat) => (
                 <div
                   key={stat.label}
-                  className="rounded-2xl border border-border bg-card/70 p-6 text-center shadow-soft backdrop-blur"
+                  className="rounded-2xl border border-border bg-card p-6 text-center shadow-soft"
                 >
-                  <div className="text-3xl font-bold tracking-tight text-foreground">{stat.value}</div>
+                  <div className="font-display text-3xl font-bold tracking-tight text-foreground">
+                    {stat.value}
+                  </div>
                   <div className="mt-1 text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               ))}
