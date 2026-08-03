@@ -122,28 +122,27 @@ function HomePage() {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
                   <span className="relative inline-flex size-2 rounded-full bg-primary" />
                 </span>
-                Now hiring: 6 AI specialists
+                Now hiring: 100 AI specialists across 20 industries
               </span>
 
               <h1 className="mt-6 text-balance text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
-                Hire AI employees for{" "}
-                <span className="text-primary">your business.</span>
+                Build Your <span className="text-primary">AI Workforce</span>
               </h1>
               <p className="mx-auto mt-6 max-w-2xl text-pretty text-xl leading-relaxed text-muted-foreground">
-                Your digital workforce for marketing, sales, support and operations — AI specialists
-                that already know your business and deliver in minutes.
+                Hire AI employees that help your business grow, automate, and scale — specialists for
+                marketing, sales, support and operations that already know your business.
               </p>
 
               <div className="mt-9 flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row">
                 <Button asChild size="xl" variant="hero">
                   <Link to="/marketplace">
-                    Browse AI Employees
+                    Explore AI Employees
                     <ArrowRight />
                   </Link>
                 </Button>
                 <Button asChild size="xl" variant="outline">
                   <Link to="/auth" search={{ mode: "signup" }}>
-                    Start Free Trial
+                    Start Building Your AI Team
                   </Link>
                 </Button>
               </div>
@@ -154,8 +153,8 @@ function HomePage() {
 
             <div className="mt-16 grid gap-6 sm:grid-cols-3">
               {[
-                { value: "6", label: "AI specialists available" },
-                { value: "< 5 min", label: "From signup to first deliverable" },
+                { value: "100", label: "AI specialists available" },
+                { value: "20", label: "Industries served" },
                 { value: "24/7", label: "Your AI team never sleeps" },
               ].map((stat) => (
                 <div
@@ -169,6 +168,7 @@ function HomePage() {
                 </div>
               ))}
             </div>
+
           </div>
         </section>
 
