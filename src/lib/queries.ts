@@ -22,11 +22,42 @@ import {
   listNotifications,
   getActivationState,
 } from "./workforce.functions";
+import { getMemoryCenter } from "./memory.functions";
+import { getToolRegistry } from "./tools.functions";
+import { listProjects, getProject } from "./projects.functions";
+import { listWorkflows } from "./workflows.functions";
+
+export const memoryCenterQuery = queryOptions({
+  queryKey: ["memory-center"],
+  queryFn: () => getMemoryCenter(),
+});
+
+export const toolRegistryQuery = queryOptions({
+  queryKey: ["tool-registry"],
+  queryFn: () => getToolRegistry(),
+});
+
+export const projectsQuery = queryOptions({
+  queryKey: ["projects"],
+  queryFn: () => listProjects(),
+});
+
+export const projectQuery = (id: string) =>
+  queryOptions({
+    queryKey: ["project", id],
+    queryFn: () => getProject({ data: { id } }),
+  });
+
+export const workflowsQuery = queryOptions({
+  queryKey: ["workflows"],
+  queryFn: () => listWorkflows(),
+});
 
 export const workforceQuery = queryOptions({
   queryKey: ["workforce"],
   queryFn: () => getWorkforceOverview(),
 });
+
 
 export const workforceTasksQuery = queryOptions({
   queryKey: ["workforce-tasks"],
