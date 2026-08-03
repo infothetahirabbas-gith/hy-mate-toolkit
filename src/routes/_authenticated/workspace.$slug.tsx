@@ -263,9 +263,9 @@ export function ResultCard({ result }: { result: AiEmployeeResult }) {
         </div>
       ) : null}
 
-      {result.nextCheckIn ? (
+      {result.closingNote ? (
         <p className="border-t border-border pt-4 text-xs text-muted-foreground">
-          Next check-in: {result.nextCheckIn}
+          {result.closingNote}
         </p>
       ) : null}
     </section>
