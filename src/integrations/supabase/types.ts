@@ -287,40 +287,55 @@ export type Database = {
         Row: {
           completed_at: string | null
           created_at: string
+          deadline: string | null
+          description: string | null
           employee_id: string
           error: string | null
           id: string
           input: string | null
+          priority: string
           result: Json | null
           status: string
           task_name: string
           task_type: string
+          tools_required: string[]
+          updated_at: string
           user_id: string
         }
         Insert: {
           completed_at?: string | null
           created_at?: string
+          deadline?: string | null
+          description?: string | null
           employee_id: string
           error?: string | null
           id?: string
           input?: string | null
+          priority?: string
           result?: Json | null
           status?: string
           task_name: string
           task_type?: string
+          tools_required?: string[]
+          updated_at?: string
           user_id: string
         }
         Update: {
           completed_at?: string | null
           created_at?: string
+          deadline?: string | null
+          description?: string | null
           employee_id?: string
           error?: string | null
           id?: string
           input?: string | null
+          priority?: string
           result?: Json | null
           status?: string
           task_name?: string
           task_type?: string
+          tools_required?: string[]
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -504,6 +519,57 @@ export type Database = {
             columns: ["employee_id"]
             isOneToOne: false
             referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          employee_id: string | null
+          id: string
+          kind: string
+          read_at: string | null
+          task_id: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          kind?: string
+          read_at?: string | null
+          task_id?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          employee_id?: string | null
+          id?: string
+          kind?: string
+          read_at?: string | null
+          task_id?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tasks"
             referencedColumns: ["id"]
           },
         ]
@@ -738,12 +804,17 @@ export type Database = {
       }
       user_subscriptions: {
         Row: {
+          activated_at: string | null
           amount: number
           billing_cycle: string
+          brand_voice: string | null
           cancelled_at: string | null
+          display_name: string | null
           employee_id: string
           end_date: string | null
           id: string
+          instructions: string | null
+          onboarding_completed: boolean
           plan: string
           plan_name: string
           price_monthly: number
@@ -751,14 +822,20 @@ export type Database = {
           status: string
           subscription_date: string
           user_id: string
+          working_preferences: string | null
         }
         Insert: {
+          activated_at?: string | null
           amount?: number
           billing_cycle?: string
+          brand_voice?: string | null
           cancelled_at?: string | null
+          display_name?: string | null
           employee_id: string
           end_date?: string | null
           id?: string
+          instructions?: string | null
+          onboarding_completed?: boolean
           plan?: string
           plan_name?: string
           price_monthly?: number
@@ -766,14 +843,20 @@ export type Database = {
           status?: string
           subscription_date?: string
           user_id: string
+          working_preferences?: string | null
         }
         Update: {
+          activated_at?: string | null
           amount?: number
           billing_cycle?: string
+          brand_voice?: string | null
           cancelled_at?: string | null
+          display_name?: string | null
           employee_id?: string
           end_date?: string | null
           id?: string
+          instructions?: string | null
+          onboarding_completed?: boolean
           plan?: string
           plan_name?: string
           price_monthly?: number
@@ -781,6 +864,7 @@ export type Database = {
           status?: string
           subscription_date?: string
           user_id?: string
+          working_preferences?: string | null
         }
         Relationships: [
           {
