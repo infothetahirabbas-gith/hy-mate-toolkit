@@ -61,9 +61,9 @@ function MarketplacePage() {
       <SiteHeader />
 
       <main className="flex-1">
-        <section className="border-b border-border bg-muted/40">
+        <section className="border-b border-border bg-card">
           <div className="mx-auto max-w-6xl px-5 py-16">
-            <h1 className="text-4xl font-extrabold tracking-tighter sm:text-5xl">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
               The AI employee marketplace
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-muted-foreground">
@@ -71,27 +71,49 @@ function MarketplacePage() {
               them in your dashboard.
             </p>
 
-            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <div className="relative w-full sm:max-w-sm">
+            <div className="mt-8 space-y-4">
+              <div className="relative w-full sm:max-w-md">
                 <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search by role or skill"
+                  placeholder="Search AI Employees..."
                   maxLength={80}
-                  className="pl-9"
+                  className="h-12 pl-9"
                   aria-label="Search AI employees"
                 />
               </div>
-              <div className="flex flex-wrap gap-2">
+
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Category
+                </span>
                 {categories.map((item) => (
                   <Button
                     key={item}
                     size="sm"
                     variant={item === category ? "default" : "outline"}
+                    className="rounded-full"
                     onClick={() => setCategory(item)}
                   >
                     {item}
+                  </Button>
+                ))}
+              </div>
+
+              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Price
+                </span>
+                {PRICE_FILTERS.map((item) => (
+                  <Button
+                    key={item.label}
+                    size="sm"
+                    variant={item.label === price ? "default" : "outline"}
+                    className="rounded-full"
+                    onClick={() => setPrice(item.label)}
+                  >
+                    {item.label}
                   </Button>
                 ))}
               </div>
