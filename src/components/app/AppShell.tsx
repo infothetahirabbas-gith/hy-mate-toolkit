@@ -21,6 +21,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { NotificationBell } from "@/components/app/NotificationBell";
 import { supabase } from "@/integrations/supabase/client";
 import { getMyProfile } from "@/lib/account.functions";
 import { cn } from "@/lib/utils";
