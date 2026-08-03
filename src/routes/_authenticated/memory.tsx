@@ -15,7 +15,6 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/app/AppShell";
 import { EmployeeAvatar } from "@/components/EmployeeAvatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
@@ -115,7 +114,7 @@ function MemoryPage() {
   });
 
   const clearAll = useMutation({
-    mutationFn: () => clearAllMemories({}),
+    mutationFn: () => clearAllMemories(),
     onSuccess: () => {
       invalidate();
       toast.success("All memories cleared");
