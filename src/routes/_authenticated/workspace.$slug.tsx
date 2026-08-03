@@ -7,7 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AppShell } from "@/components/app/AppShell";
+import { AgentChat } from "@/components/app/AgentChat";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EmployeeAvatar } from "@/components/EmployeeAvatar";
+
 import { employeeQuery, employeeActivityQuery } from "@/lib/queries";
 import { runEmployeeTask } from "@/lib/ai.functions";
 import type { AiEmployeeResult } from "@/lib/ai-types";
@@ -151,7 +154,9 @@ function WorkspacePage() {
               )}
             </div>
           </section>
-        </div>
+          </TabsContent>
+        </Tabs>
+
 
         <aside className="space-y-4">
           <div className="rounded-2xl border border-border bg-card p-6 shadow-soft">
