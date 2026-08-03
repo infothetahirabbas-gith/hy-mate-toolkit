@@ -191,6 +191,21 @@ function AuthPage() {
                   </div>
                 ) : null}
 
+                {mode === "signup" ? (
+                  <div className="space-y-2">
+                    <Label htmlFor="company">Company name</Label>
+                    <Input
+                      id="company"
+                      value={company}
+                      onChange={(event) => setCompany(event.target.value)}
+                      maxLength={120}
+                      placeholder="Northwind Studio"
+                      autoComplete="organization"
+                    />
+                  </div>
+                ) : null}
+
+
                 <div className="space-y-2">
                   <Label htmlFor="email">Work email</Label>
                   <Input
