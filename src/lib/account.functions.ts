@@ -150,7 +150,7 @@ export const hireEmployee = createServerFn({ method: "POST" })
         employee_id: employee.id,
         status: "active",
         plan: data.plan,
-        plan_name: PLAN_NAMES[data.plan],
+        plan_name: PLAN_NAMES[data.plan] ?? "Starter",
         price_monthly: employee.price_monthly,
         amount: employee.price_monthly,
         billing_cycle: "monthly",
