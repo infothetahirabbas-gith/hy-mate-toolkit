@@ -119,10 +119,10 @@ export const adminUpdateEmployee = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await assertAdmin(context as never);
-    const patch: Record<string, unknown> = {};
-    if (data.price_monthly !== undefined) patch["price_monthly"] = data.price_monthly;
-    if (data.is_active !== undefined) patch["is_active"] = data.is_active;
-    if (data.status !== undefined) patch["status"] = data.status;
+    const patch: { price_monthly?: number; is_active?: boolean; status?: string } = {};
+    if (data.price_monthly !== undefined) patch.price_monthly = data.price_monthly;
+    if (data.is_active !== undefined) patch.is_active = data.is_active;
+    if (data.status !== undefined) patch.status = data.status;
     const { error } = await context.supabase.from("ai_employees").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
