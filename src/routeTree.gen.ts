@@ -20,6 +20,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedMyEmployeesRouteImport } from './routes/_authenticated/my-employees'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
+import { Route as AuthenticatedWorkspaceSlugRouteImport } from './routes/_authenticated/workspace.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -76,6 +77,12 @@ const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   path: '/employees/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedWorkspaceSlugRoute =
+  AuthenticatedWorkspaceSlugRouteImport.update({
+    id: '/workspace/$slug',
+    path: '/workspace/$slug',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -88,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/employees/$slug': typeof EmployeesSlugRoute
+  '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,6 +108,7 @@ export interface FileRoutesByTo {
   '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/employees/$slug': typeof EmployeesSlugRoute
+  '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,6 +123,7 @@ export interface FileRoutesById {
   '/_authenticated/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/employees/$slug': typeof EmployeesSlugRoute
+  '/_authenticated/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/my-employees'
     | '/onboarding'
     | '/employees/$slug'
+    | '/workspace/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/my-employees'
     | '/onboarding'
     | '/employees/$slug'
+    | '/workspace/$slug'
   id:
     | '__root__'
     | '/'
@@ -153,6 +165,7 @@ export interface FileRouteTypes {
     | '/_authenticated/my-employees'
     | '/_authenticated/onboarding'
     | '/employees/$slug'
+    | '/_authenticated/workspace/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployeesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/workspace/$slug': {
+      id: '/_authenticated/workspace/$slug'
+      path: '/workspace/$slug'
+      fullPath: '/workspace/$slug'
+      preLoaderRoute: typeof AuthenticatedWorkspaceSlugRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -252,12 +272,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedMyEmployeesRoute: typeof AuthenticatedMyEmployeesRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedWorkspaceSlugRoute: typeof AuthenticatedWorkspaceSlugRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedMyEmployeesRoute: AuthenticatedMyEmployeesRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedWorkspaceSlugRoute: AuthenticatedWorkspaceSlugRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

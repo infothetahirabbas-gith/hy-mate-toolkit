@@ -239,14 +239,14 @@ export function ResultCard({ result }: { result: AiEmployeeResult }) {
         </div>
       ) : null}
 
-      {result.action_plan.length > 0 ? (
+      {result.actionPlan.length > 0 ? (
         <div>
           <h3 className="flex items-center gap-2 text-sm font-semibold">
             <ListChecks className="size-4 text-primary" />
             Action plan
           </h3>
           <ol className="mt-3 space-y-3">
-            {result.action_plan.map((step, index) => (
+            {result.actionPlan.map((step, index) => (
               <li key={step.title} className="flex gap-3 rounded-xl border border-border p-4">
                 <span className="font-mono text-xs text-muted-foreground">0{index + 1}</span>
                 <div>
@@ -263,9 +263,9 @@ export function ResultCard({ result }: { result: AiEmployeeResult }) {
         </div>
       ) : null}
 
-      {result.next_check_in ? (
+      {result.nextCheckIn ? (
         <p className="border-t border-border pt-4 text-xs text-muted-foreground">
-          Next check-in: {result.next_check_in}
+          Next check-in: {result.nextCheckIn}
         </p>
       ) : null}
     </section>
