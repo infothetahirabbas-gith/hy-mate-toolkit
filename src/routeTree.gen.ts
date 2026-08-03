@@ -23,6 +23,7 @@ import { Route as AuthenticatedMyEmployeesRouteImport } from './routes/_authenti
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
@@ -98,6 +99,11 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   id: '/employees/$slug',
   path: '/employees/$slug',
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/tasks': typeof AuthenticatedTasksRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries/': typeof IndustriesIndexRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
+  '/tasks': typeof AuthenticatedTasksRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries': typeof IndustriesIndexRoute
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/industries/': typeof IndustriesIndexRoute
@@ -195,6 +204,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/reports'
     | '/settings'
+    | '/tasks'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries/'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/reports'
     | '/settings'
+    | '/tasks'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/_authenticated/onboarding'
     | '/_authenticated/reports'
     | '/_authenticated/settings'
+    | '/_authenticated/tasks'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/industries/'
@@ -353,6 +365,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthenticatedTasksRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/employees/$slug': {
       id: '/employees/$slug'
       path: '/employees/$slug'
@@ -392,6 +411,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+  AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedWorkspaceSlugRoute: typeof AuthenticatedWorkspaceSlugRoute
 }
 
@@ -403,6 +423,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedWorkspaceSlugRoute: AuthenticatedWorkspaceSlugRoute,
 }
 
