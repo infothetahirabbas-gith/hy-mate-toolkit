@@ -3,6 +3,12 @@ import { listEmployees, getEmployeeBySlug } from "./catalog.functions";
 import { listCategories } from "./categories.functions";
 import { getTasks, getAnalytics, listIntegrations } from "./insights.functions";
 import {
+  listKnowledge,
+  listMemories,
+  getAgentConversation,
+  getWorkforcePerformance,
+} from "./agent-os.functions";
+import {
   getDashboardOverview,
   getMySubscriptions,
   getBusinessProfile,
@@ -10,6 +16,29 @@ import {
   getReports,
   getEmployeeActivity,
 } from "./account.functions";
+
+export const knowledgeQuery = queryOptions({
+  queryKey: ["knowledge"],
+  queryFn: () => listKnowledge(),
+});
+
+export const memoriesQuery = queryOptions({
+  queryKey: ["memories"],
+  queryFn: () => listMemories(),
+});
+
+export const performanceQuery = queryOptions({
+  queryKey: ["performance"],
+  queryFn: () => getWorkforcePerformance(),
+});
+
+export const agentConversationQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["agent-conversation", slug],
+    queryFn: () => getAgentConversation({ data: { slug } }),
+  });
+
+
 
 export const tasksQuery = queryOptions({
   queryKey: ["tasks"],
