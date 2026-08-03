@@ -245,7 +245,7 @@ export const runTask = createServerFn({ method: "POST" })
     const { data: task, error: taskError } = await supabase
       .from("ai_tasks")
       .select(
-        "id, task_name, description, input, task_type, tools_required, employee_id, employee:ai_employees(id, name, role_title, category, persona, skills, features)",
+        "id, task_name, description, input, task_type, tools_required, requires_approval, employee_id, employee:ai_employees(id, name, role_title, category, persona, skills, features)",
       )
       .eq("id", data.taskId)
       .eq("user_id", userId)
@@ -264,7 +264,42 @@ export const runTask = createServerFn({ method: "POST" })
       features: string[] | null;
     };
 
-    await supabase.from("ai_tasks").update({ status: "processing" }).eq("id", task.id);
+    const toolsRequired = task.tools_required ?? [];
+    const { data: permissions } = await supabase
+      .from("employee_tool_permissions")
+      .select("tool_id, permission")
+      .eq("user_id", userId)
+      .eq("employee_id", task.employee_id);
+
+    const permissionFor = (toolId: string) =>
+      permissions?.find((p) => p.tool_id === toolId)?.permission ?? "full";
+
+    const steps: { label: string; status: string; detail?: string }[] = [
+      { label: "Understanding the brief", status: "running" },
+      { label: "Gathering business context", status: "pending" },
+      ...toolsRequired.map((tool) => ({ label: `Using ${tool}`, status: "pending" })),
+      { label: "Producing the deliverable", status: "pending" },
+      { label: "Preparing your report", status: "pending" },
+    ];
+
+    const setStep = async (index: number, status: string, detail?: string) => {
+      const current = steps[index];
+      if (current) {
+        current.status = status;
+        if (detail) current.detail = detail;
+      }
+      await supabase
+        .from("ai_tasks")
+        .update({ steps: JSON.parse(JSON.stringify(steps)) })
+        .eq("id", task.id)
+        .eq("user_id", userId);
+    };
+
+    await supabase
+      .from("ai_tasks")
+      .update({ status: "processing", steps: JSON.parse(JSON.stringify(steps)) })
+      .eq("id", task.id);
+
     await notify(supabase as never, {
       user_id: userId,
       employee_id: task.employee_id,
