@@ -17,6 +17,7 @@ import { Route as MarketplaceRouteImport } from './routes/marketplace'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedMyEmployeesRouteImport } from './routes/_authenticated/my-employees'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +59,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMyEmployeesRoute =
+  AuthenticatedMyEmployeesRouteImport.update({
+    id: '/my-employees',
+    path: '/my-employees',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   id: '/employees/$slug',
   path: '/employees/$slug',
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/employees/$slug': typeof EmployeesSlugRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/employees/$slug': typeof EmployeesSlugRoute
 }
 export interface FileRoutesById {
@@ -94,6 +103,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/my-employees': typeof AuthenticatedMyEmployeesRoute
   '/employees/$slug': typeof EmployeesSlugRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/dashboard'
+    | '/my-employees'
     | '/employees/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/dashboard'
+    | '/my-employees'
     | '/employees/$slug'
   id:
     | '__root__'
@@ -127,6 +139,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/_authenticated/dashboard'
+    | '/_authenticated/my-employees'
     | '/employees/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -199,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/my-employees': {
+      id: '/_authenticated/my-employees'
+      path: '/my-employees'
+      fullPath: '/my-employees'
+      preLoaderRoute: typeof AuthenticatedMyEmployeesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/employees/$slug': {
       id: '/employees/$slug'
       path: '/employees/$slug'
@@ -211,10 +231,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedMyEmployeesRoute: typeof AuthenticatedMyEmployeesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedMyEmployeesRoute: AuthenticatedMyEmployeesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
