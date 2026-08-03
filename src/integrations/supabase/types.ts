@@ -354,6 +354,42 @@ export type Database = {
           },
         ]
       }
+      user_integrations: {
+        Row: {
+          account_label: string | null
+          category: string
+          connected_at: string
+          created_at: string
+          id: string
+          provider: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_label?: string | null
+          category: string
+          connected_at?: string
+          created_at?: string
+          id?: string
+          provider: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_label?: string | null
+          category?: string
+          connected_at?: string
+          created_at?: string
+          id?: string
+          provider?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string

@@ -1,11 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { EmployeeAvatar } from "@/components/EmployeeAvatar";
 import type { CatalogEmployee } from "@/lib/catalog.functions";
 
 export function EmployeeCard({ employee }: { employee: CatalogEmployee }) {
+  const reviews = employee.reviews ?? [];
+  const rating = reviews.length
+    ? reviews.reduce((sum, review) => sum + (review.rating ?? 5), 0) / reviews.length
+    : 0;
+
   return (
     <article className="group relative flex h-full flex-col rounded-2xl border border-border bg-card p-6 transition-all duration-500 hover:border-primary/25 hover:shadow-lift">
       <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3">
@@ -17,11 +22,21 @@ export function EmployeeCard({ employee }: { employee: CatalogEmployee }) {
         <div className="min-w-0">
           <h3 className="truncate text-lg font-bold">{employee.name}</h3>
           <p className="truncate text-sm text-muted-foreground">{employee.role_title}</p>
+          {rating > 0 ? (
+            <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+              <Star className="size-3.5 fill-accent text-accent" />
+              <span className="font-semibold text-foreground">{rating.toFixed(1)}</span>
+              <span>({reviews.length})</span>
+              <span aria-hidden="true">·</span>
+              <span className="truncate">{employee.category}</span>
+            </p>
+          ) : null}
         </div>
         <Badge variant="secondary" className="shrink-0 rounded-full font-normal">
           {employee.department}
         </Badge>
       </div>
+
 
       {employee.personality.length > 0 ? (
         <div className="mt-4 flex flex-wrap gap-1.5">

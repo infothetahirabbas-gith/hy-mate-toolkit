@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { listEmployees, getEmployeeBySlug } from "./catalog.functions";
 import { listCategories } from "./categories.functions";
+import { getTasks, getAnalytics, listIntegrations } from "./insights.functions";
 import {
   getDashboardOverview,
   getMySubscriptions,
@@ -9,6 +10,22 @@ import {
   getReports,
   getEmployeeActivity,
 } from "./account.functions";
+
+export const tasksQuery = queryOptions({
+  queryKey: ["tasks"],
+  queryFn: () => getTasks(),
+});
+
+export const analyticsQuery = queryOptions({
+  queryKey: ["analytics"],
+  queryFn: () => getAnalytics(),
+});
+
+export const integrationsQuery = queryOptions({
+  queryKey: ["integrations"],
+  queryFn: () => listIntegrations(),
+});
+
 
 export const employeesQuery = queryOptions({
   queryKey: ["employees"],

@@ -9,6 +9,7 @@ import {
   Rocket,
   ShieldCheck,
   Sparkles,
+  Star,
   Workflow,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,11 +17,16 @@ import { Badge } from "@/components/ui/badge";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { EmployeeCard } from "@/components/EmployeeCard";
-import { employeesQuery } from "@/lib/queries";
+import { employeesQuery, categoriesQuery } from "@/lib/queries";
 import { PLANS } from "@/lib/plans";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(employeesQuery),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(employeesQuery),
+      context.queryClient.ensureQueryData(categoriesQuery),
+    ]),
+
   head: () => ({
     meta: [
       { title: "AI Employee Marketplace — Hire AI Employees For Your Business" },
@@ -103,9 +109,32 @@ const FAQS = [
   },
 ];
 
+const TESTIMONIALS = [
+  {
+    quote:
+      "We hired an AI SEO manager instead of an agency. Two months in, our organic traffic is up and we cancelled a $2,500 retainer.",
+    name: "Priya N.",
+    role: "Operations Lead, B2B SaaS",
+  },
+  {
+    quote:
+      "Onboarding took ten minutes. Every deliverable comes back in our brand voice, ready to publish.",
+    name: "James O.",
+    role: "Founder, Ecommerce",
+  },
+  {
+    quote:
+      "It feels like a real team member. I brief it in the morning and the report is waiting for me.",
+    name: "Daniel K.",
+    role: "Managing Director, Agency",
+  },
+];
+
 function HomePage() {
   const { data: employees } = useSuspenseQuery(employeesQuery);
+  const { data: categories } = useSuspenseQuery(categoriesQuery);
   const featured = employees.slice(0, 6);
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -122,28 +151,27 @@ function HomePage() {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-primary opacity-75" />
                   <span className="relative inline-flex size-2 rounded-full bg-primary" />
                 </span>
-                Now hiring: 6 AI specialists
+                Now hiring: 100 AI specialists across 20 industries
               </span>
 
               <h1 className="mt-6 text-balance text-5xl font-bold leading-[0.95] tracking-tight sm:text-6xl md:text-7xl">
-                Hire AI employees for{" "}
-                <span className="text-primary">your business.</span>
+                Build Your <span className="text-primary">AI Workforce</span>
               </h1>
               <p className="mx-auto mt-6 max-w-2xl text-pretty text-xl leading-relaxed text-muted-foreground">
-                Your digital workforce for marketing, sales, support and operations — AI specialists
-                that already know your business and deliver in minutes.
+                Hire AI employees that help your business grow, automate, and scale — specialists for
+                marketing, sales, support and operations that already know your business.
               </p>
 
               <div className="mt-9 flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row">
                 <Button asChild size="xl" variant="hero">
                   <Link to="/marketplace">
-                    Browse AI Employees
+                    Explore AI Employees
                     <ArrowRight />
                   </Link>
                 </Button>
                 <Button asChild size="xl" variant="outline">
                   <Link to="/auth" search={{ mode: "signup" }}>
-                    Start Free Trial
+                    Start Building Your AI Team
                   </Link>
                 </Button>
               </div>
@@ -154,8 +182,8 @@ function HomePage() {
 
             <div className="mt-16 grid gap-6 sm:grid-cols-3">
               {[
-                { value: "6", label: "AI specialists available" },
-                { value: "< 5 min", label: "From signup to first deliverable" },
+                { value: "100", label: "AI specialists available" },
+                { value: "20", label: "Industries served" },
                 { value: "24/7", label: "Your AI team never sleeps" },
               ].map((stat) => (
                 <div
@@ -169,6 +197,7 @@ function HomePage() {
                 </div>
               ))}
             </div>
+
           </div>
         </section>
 
@@ -198,8 +227,48 @@ function HomePage() {
           </div>
         </section>
 
+        {/* Industries */}
+        <section className="border-t border-border bg-muted/40">
+          <div className="mx-auto max-w-6xl px-5 py-20">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div className="max-w-2xl">
+                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Industries we staff</h2>
+                <p className="mt-4 text-muted-foreground">
+                  Five specialists in every industry, trained on the work that industry actually does.
+                </p>
+              </div>
+              <Button asChild variant="outline">
+                <Link to="/industries">
+                  All industries
+                  <ArrowRight />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {categories.slice(0, 8).map((category) => (
+                <Link
+                  key={category.id}
+                  to="/industries/$slug"
+                  params={{ slug: category.slug }}
+                  className="group rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:border-primary/25 hover:shadow-lift"
+                >
+                  <h3 className="font-semibold">{category.name}</h3>
+                  <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">
+                    {category.tagline ?? category.description}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
+                    5 specialists
+                    <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Marketplace preview */}
-        <section className="border-y border-border bg-muted/40">
+        <section className="border-y border-border">
           <div className="mx-auto max-w-6xl px-5 py-20">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="max-w-2xl">
@@ -223,6 +292,40 @@ function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Testimonials */}
+        <section className="mx-auto max-w-6xl px-5 py-20">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Teams already running on AI staff
+            </h2>
+            <p className="mt-4 text-muted-foreground">
+              Founders and operators using AI employees for the work they never had headcount for.
+            </p>
+          </div>
+          <div className="mt-12 grid gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((item) => (
+              <figure
+                key={item.name}
+                className="flex h-full flex-col rounded-2xl border border-border bg-card p-7 shadow-soft"
+              >
+                <div className="flex gap-0.5 text-accent">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} className="size-4 fill-current" />
+                  ))}
+                </div>
+                <blockquote className="mt-5 flex-1 text-sm leading-relaxed text-foreground/85">
+                  “{item.quote}”
+                </blockquote>
+                <figcaption className="mt-6 border-t border-border pt-4 text-sm">
+                  <span className="font-semibold">{item.name}</span>
+                  <span className="block text-muted-foreground">{item.role}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+
 
         {/* Benefits */}
         <section className="mx-auto max-w-6xl px-5 py-20">
