@@ -24,6 +24,7 @@ export type CatalogEmployee = {
   workspace_input_placeholder: string;
   gender: string;
   department: string;
+  department_slug: string | null;
   main_responsibility: string;
   personality: string[];
   daily_tasks: string[];
