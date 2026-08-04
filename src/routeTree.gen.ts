@@ -33,6 +33,7 @@ import { Route as AuthenticatedTeamsRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedToolsRouteImport } from './routes/_authenticated/tools'
 import { Route as AuthenticatedWorkflowsRouteImport } from './routes/_authenticated/workflows'
 import { Route as DepartmentsIndexRouteImport } from './routes/departments.index'
+import { Route as DepartmentsSlugRouteImport } from './routes/departments.$slug'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
@@ -161,6 +162,11 @@ const DepartmentsIndexRoute = DepartmentsIndexRouteImport.update({
   path: '/departments/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DepartmentsSlugRoute = DepartmentsSlugRouteImport.update({
+  id: '/departments/$slug',
+  path: '/departments/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   id: '/employees/$slug',
   path: '/employees/$slug',
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/teams': typeof AuthenticatedTeamsRoute
   '/tools': typeof AuthenticatedToolsRoute
   '/workflows': typeof AuthenticatedWorkflowsRoute
+  '/departments/$slug': typeof DepartmentsSlugRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/departments/': typeof DepartmentsIndexRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/teams': typeof AuthenticatedTeamsRoute
   '/tools': typeof AuthenticatedToolsRoute
   '/workflows': typeof AuthenticatedWorkflowsRoute
+  '/departments/$slug': typeof DepartmentsSlugRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/departments': typeof DepartmentsIndexRoute
@@ -274,6 +282,7 @@ export interface FileRoutesById {
   '/_authenticated/teams': typeof AuthenticatedTeamsRoute
   '/_authenticated/tools': typeof AuthenticatedToolsRoute
   '/_authenticated/workflows': typeof AuthenticatedWorkflowsRoute
+  '/departments/$slug': typeof DepartmentsSlugRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
   '/departments/': typeof DepartmentsIndexRoute
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/teams'
     | '/tools'
     | '/workflows'
+    | '/departments/$slug'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/departments/'
@@ -336,6 +346,7 @@ export interface FileRouteTypes {
     | '/teams'
     | '/tools'
     | '/workflows'
+    | '/departments/$slug'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/departments'
@@ -367,6 +378,7 @@ export interface FileRouteTypes {
     | '/_authenticated/teams'
     | '/_authenticated/tools'
     | '/_authenticated/workflows'
+    | '/departments/$slug'
     | '/employees/$slug'
     | '/industries/$slug'
     | '/departments/'
@@ -383,6 +395,7 @@ export interface RootRouteChildren {
   MarketplaceRoute: typeof MarketplaceRoute
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  DepartmentsSlugRoute: typeof DepartmentsSlugRoute
   EmployeesSlugRoute: typeof EmployeesSlugRoute
   IndustriesSlugRoute: typeof IndustriesSlugRoute
   DepartmentsIndexRoute: typeof DepartmentsIndexRoute
@@ -559,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DepartmentsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/departments/$slug': {
+      id: '/departments/$slug'
+      path: '/departments/$slug'
+      fullPath: '/departments/$slug'
+      preLoaderRoute: typeof DepartmentsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/employees/$slug': {
       id: '/employees/$slug'
       path: '/employees/$slug'
@@ -650,6 +670,7 @@ const rootRouteChildren: RootRouteChildren = {
   MarketplaceRoute: MarketplaceRoute,
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  DepartmentsSlugRoute: DepartmentsSlugRoute,
   EmployeesSlugRoute: EmployeesSlugRoute,
   IndustriesSlugRoute: IndustriesSlugRoute,
   DepartmentsIndexRoute: DepartmentsIndexRoute,

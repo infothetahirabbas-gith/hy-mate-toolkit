@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { label: "Industries", to: "/industries" },
+  { label: "Departments", to: "/departments" },
   { label: "Marketplace", to: "/marketplace" },
   { label: "How it works", to: "/how-it-works" },
   { label: "Pricing", to: "/pricing" },
