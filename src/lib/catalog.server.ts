@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 
 export const CATALOG_COLUMNS =
-  "id, slug, name, role_title, category, tagline, description, features, skills, price_monthly, accent, workspace_input_label, workspace_input_placeholder, gender, department, main_responsibility, personality, daily_tasks, business_benefits, target_customers, integrations, reviews";
+  "id, slug, name, role_title, category, tagline, description, features, skills, price_monthly, accent, workspace_input_label, workspace_input_placeholder, gender, department, department_slug, main_responsibility, personality, daily_tasks, business_benefits, target_customers, integrations, reviews";
 
 export function publicClient() {
   const url = process.env["SUPABASE_URL"];
