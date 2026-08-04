@@ -185,6 +185,7 @@ export type Database = {
           created_at: string
           daily_tasks: string[]
           department: string
+          department_slug: string | null
           description: string
           features: string[]
           gender: string
@@ -221,6 +222,7 @@ export type Database = {
           created_at?: string
           daily_tasks?: string[]
           department?: string
+          department_slug?: string | null
           description: string
           features?: string[]
           gender?: string
@@ -257,6 +259,7 @@ export type Database = {
           created_at?: string
           daily_tasks?: string[]
           department?: string
+          department_slug?: string | null
           description?: string
           features?: string[]
           gender?: string
@@ -559,6 +562,42 @@ export type Database = {
           updated_at?: string
           user_id?: string
           website?: string | null
+        }
+        Relationships: []
+      }
+      departments: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+          slug: string
+          sort_order: number
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+          slug: string
+          sort_order?: number
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          sort_order?: number
+          tagline?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
