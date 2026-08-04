@@ -32,6 +32,7 @@ import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedTeamsRouteImport } from './routes/_authenticated/teams'
 import { Route as AuthenticatedToolsRouteImport } from './routes/_authenticated/tools'
 import { Route as AuthenticatedWorkflowsRouteImport } from './routes/_authenticated/workflows'
+import { Route as DepartmentsIndexRouteImport } from './routes/departments.index'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
@@ -155,6 +156,11 @@ const AuthenticatedWorkflowsRoute = AuthenticatedWorkflowsRouteImport.update({
   path: '/workflows',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DepartmentsIndexRoute = DepartmentsIndexRouteImport.update({
+  id: '/departments/',
+  path: '/departments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   id: '/employees/$slug',
   path: '/employees/$slug',
@@ -208,6 +214,7 @@ export interface FileRoutesByFullPath {
   '/workflows': typeof AuthenticatedWorkflowsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
+  '/departments/': typeof DepartmentsIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
@@ -237,6 +244,7 @@ export interface FileRoutesByTo {
   '/workflows': typeof AuthenticatedWorkflowsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
+  '/departments': typeof DepartmentsIndexRoute
   '/industries': typeof IndustriesIndexRoute
   '/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
@@ -268,6 +276,7 @@ export interface FileRoutesById {
   '/_authenticated/workflows': typeof AuthenticatedWorkflowsRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
+  '/departments/': typeof DepartmentsIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/_authenticated/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/_authenticated/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
@@ -299,6 +308,7 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/employees/$slug'
     | '/industries/$slug'
+    | '/departments/'
     | '/industries/'
     | '/activate/$slug'
     | '/workspace/$slug'
@@ -328,6 +338,7 @@ export interface FileRouteTypes {
     | '/workflows'
     | '/employees/$slug'
     | '/industries/$slug'
+    | '/departments'
     | '/industries'
     | '/activate/$slug'
     | '/workspace/$slug'
@@ -358,6 +369,7 @@ export interface FileRouteTypes {
     | '/_authenticated/workflows'
     | '/employees/$slug'
     | '/industries/$slug'
+    | '/departments/'
     | '/industries/'
     | '/_authenticated/activate/$slug'
     | '/_authenticated/workspace/$slug'
@@ -373,6 +385,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   EmployeesSlugRoute: typeof EmployeesSlugRoute
   IndustriesSlugRoute: typeof IndustriesSlugRoute
+  DepartmentsIndexRoute: typeof DepartmentsIndexRoute
   IndustriesIndexRoute: typeof IndustriesIndexRoute
 }
 
@@ -539,6 +552,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkflowsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/departments/': {
+      id: '/departments/'
+      path: '/departments'
+      fullPath: '/departments/'
+      preLoaderRoute: typeof DepartmentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/employees/$slug': {
       id: '/employees/$slug'
       path: '/employees/$slug'
@@ -632,6 +652,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   EmployeesSlugRoute: EmployeesSlugRoute,
   IndustriesSlugRoute: IndustriesSlugRoute,
+  DepartmentsIndexRoute: DepartmentsIndexRoute,
   IndustriesIndexRoute: IndustriesIndexRoute,
 }
 export const routeTree = rootRouteImport
