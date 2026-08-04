@@ -32,6 +32,8 @@ import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedTeamsRouteImport } from './routes/_authenticated/teams'
 import { Route as AuthenticatedToolsRouteImport } from './routes/_authenticated/tools'
 import { Route as AuthenticatedWorkflowsRouteImport } from './routes/_authenticated/workflows'
+import { Route as DepartmentsIndexRouteImport } from './routes/departments.index'
+import { Route as DepartmentsSlugRouteImport } from './routes/departments.$slug'
 import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
@@ -155,6 +157,16 @@ const AuthenticatedWorkflowsRoute = AuthenticatedWorkflowsRouteImport.update({
   path: '/workflows',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DepartmentsIndexRoute = DepartmentsIndexRouteImport.update({
+  id: '/departments/',
+  path: '/departments/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DepartmentsSlugRoute = DepartmentsSlugRouteImport.update({
+  id: '/departments/$slug',
+  path: '/departments/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EmployeesSlugRoute = EmployeesSlugRouteImport.update({
   id: '/employees/$slug',
   path: '/employees/$slug',
@@ -206,8 +218,10 @@ export interface FileRoutesByFullPath {
   '/teams': typeof AuthenticatedTeamsRoute
   '/tools': typeof AuthenticatedToolsRoute
   '/workflows': typeof AuthenticatedWorkflowsRoute
+  '/departments/$slug': typeof DepartmentsSlugRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
+  '/departments/': typeof DepartmentsIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
@@ -235,8 +249,10 @@ export interface FileRoutesByTo {
   '/teams': typeof AuthenticatedTeamsRoute
   '/tools': typeof AuthenticatedToolsRoute
   '/workflows': typeof AuthenticatedWorkflowsRoute
+  '/departments/$slug': typeof DepartmentsSlugRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
+  '/departments': typeof DepartmentsIndexRoute
   '/industries': typeof IndustriesIndexRoute
   '/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
@@ -266,8 +282,10 @@ export interface FileRoutesById {
   '/_authenticated/teams': typeof AuthenticatedTeamsRoute
   '/_authenticated/tools': typeof AuthenticatedToolsRoute
   '/_authenticated/workflows': typeof AuthenticatedWorkflowsRoute
+  '/departments/$slug': typeof DepartmentsSlugRoute
   '/employees/$slug': typeof EmployeesSlugRoute
   '/industries/$slug': typeof IndustriesSlugRoute
+  '/departments/': typeof DepartmentsIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/_authenticated/activate/$slug': typeof AuthenticatedActivateSlugRoute
   '/_authenticated/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
@@ -297,8 +315,10 @@ export interface FileRouteTypes {
     | '/teams'
     | '/tools'
     | '/workflows'
+    | '/departments/$slug'
     | '/employees/$slug'
     | '/industries/$slug'
+    | '/departments/'
     | '/industries/'
     | '/activate/$slug'
     | '/workspace/$slug'
@@ -326,8 +346,10 @@ export interface FileRouteTypes {
     | '/teams'
     | '/tools'
     | '/workflows'
+    | '/departments/$slug'
     | '/employees/$slug'
     | '/industries/$slug'
+    | '/departments'
     | '/industries'
     | '/activate/$slug'
     | '/workspace/$slug'
@@ -356,8 +378,10 @@ export interface FileRouteTypes {
     | '/_authenticated/teams'
     | '/_authenticated/tools'
     | '/_authenticated/workflows'
+    | '/departments/$slug'
     | '/employees/$slug'
     | '/industries/$slug'
+    | '/departments/'
     | '/industries/'
     | '/_authenticated/activate/$slug'
     | '/_authenticated/workspace/$slug'
@@ -371,8 +395,10 @@ export interface RootRouteChildren {
   MarketplaceRoute: typeof MarketplaceRoute
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  DepartmentsSlugRoute: typeof DepartmentsSlugRoute
   EmployeesSlugRoute: typeof EmployeesSlugRoute
   IndustriesSlugRoute: typeof IndustriesSlugRoute
+  DepartmentsIndexRoute: typeof DepartmentsIndexRoute
   IndustriesIndexRoute: typeof IndustriesIndexRoute
 }
 
@@ -539,6 +565,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedWorkflowsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/departments/': {
+      id: '/departments/'
+      path: '/departments'
+      fullPath: '/departments/'
+      preLoaderRoute: typeof DepartmentsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/departments/$slug': {
+      id: '/departments/$slug'
+      path: '/departments/$slug'
+      fullPath: '/departments/$slug'
+      preLoaderRoute: typeof DepartmentsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/employees/$slug': {
       id: '/employees/$slug'
       path: '/employees/$slug'
@@ -630,20 +670,12 @@ const rootRouteChildren: RootRouteChildren = {
   MarketplaceRoute: MarketplaceRoute,
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  DepartmentsSlugRoute: DepartmentsSlugRoute,
   EmployeesSlugRoute: EmployeesSlugRoute,
   IndustriesSlugRoute: IndustriesSlugRoute,
+  DepartmentsIndexRoute: DepartmentsIndexRoute,
   IndustriesIndexRoute: IndustriesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

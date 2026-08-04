@@ -1,6 +1,13 @@
 import { queryOptions } from "@tanstack/react-query";
 import { listEmployees, getEmployeeBySlug } from "./catalog.functions";
 import { listCategories } from "./categories.functions";
+import { listDepartments } from "./departments.functions";
+
+export const departmentsQuery = queryOptions({
+  queryKey: ["departments"],
+  queryFn: () => listDepartments(),
+  staleTime: 5 * 60 * 1000,
+});
 import { getTasks, getAnalytics, listIntegrations } from "./insights.functions";
 import {
   listKnowledge,
