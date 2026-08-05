@@ -112,7 +112,6 @@ function EmployeeStorePage() {
   const { employee } = Route.useLoaderData();
   const { data } = useSuspenseQuery(employeeQuery(employee.slug));
   const detail = (data ?? employee) as CatalogEmployee;
-  if (typeof window !== "undefined") (window as any).__d = detail;
   const { session, loading } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
