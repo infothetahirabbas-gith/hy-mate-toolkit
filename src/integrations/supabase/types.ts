@@ -179,35 +179,55 @@ export type Database = {
           agent_configuration: Json
           available_tools: string[]
           avatar_url: string | null
+          avg_completion_minutes: number
           business_benefits: string[]
+          businesses_served: number
           category: string
           category_id: string | null
+          cost_savings_monthly: number
           created_at: string
           daily_tasks: string[]
           department: string
           department_slug: string | null
           description: string
+          experience_years: number
+          faqs: Json
           features: string[]
           gender: string
+          hours_saved_monthly: number
           id: string
           integrations: string[]
+          intro_line: string | null
           is_active: boolean
           knowledge_base: Json
+          languages: string[]
+          last_updated_on: string
           main_responsibility: string
           name: string
           persona: string
           personality: string[]
+          portfolio: Json
           price_monthly: number
+          rating: number
+          review_count: number
           reviews: Json
           role_title: string
+          satisfaction: number
+          skill_levels: Json
           skills: string[]
           slug: string
           sort_order: number
           status: string
+          success_rate: number
           system_prompt: string | null
           tagline: string
           target_customers: string[]
+          tasks_completed: number
+          team_slug: string | null
+          tool_status: Json
           updated_at: string
+          verified: boolean
+          version: string
           workspace_input_label: string
           workspace_input_placeholder: string
         }
@@ -216,35 +236,55 @@ export type Database = {
           agent_configuration?: Json
           available_tools?: string[]
           avatar_url?: string | null
+          avg_completion_minutes?: number
           business_benefits?: string[]
+          businesses_served?: number
           category: string
           category_id?: string | null
+          cost_savings_monthly?: number
           created_at?: string
           daily_tasks?: string[]
           department?: string
           department_slug?: string | null
           description: string
+          experience_years?: number
+          faqs?: Json
           features?: string[]
           gender?: string
+          hours_saved_monthly?: number
           id?: string
           integrations?: string[]
+          intro_line?: string | null
           is_active?: boolean
           knowledge_base?: Json
+          languages?: string[]
+          last_updated_on?: string
           main_responsibility?: string
           name: string
           persona: string
           personality?: string[]
+          portfolio?: Json
           price_monthly: number
+          rating?: number
+          review_count?: number
           reviews?: Json
           role_title: string
+          satisfaction?: number
+          skill_levels?: Json
           skills?: string[]
           slug: string
           sort_order?: number
           status?: string
+          success_rate?: number
           system_prompt?: string | null
           tagline: string
           target_customers?: string[]
+          tasks_completed?: number
+          team_slug?: string | null
+          tool_status?: Json
           updated_at?: string
+          verified?: boolean
+          version?: string
           workspace_input_label?: string
           workspace_input_placeholder?: string
         }
@@ -253,35 +293,55 @@ export type Database = {
           agent_configuration?: Json
           available_tools?: string[]
           avatar_url?: string | null
+          avg_completion_minutes?: number
           business_benefits?: string[]
+          businesses_served?: number
           category?: string
           category_id?: string | null
+          cost_savings_monthly?: number
           created_at?: string
           daily_tasks?: string[]
           department?: string
           department_slug?: string | null
           description?: string
+          experience_years?: number
+          faqs?: Json
           features?: string[]
           gender?: string
+          hours_saved_monthly?: number
           id?: string
           integrations?: string[]
+          intro_line?: string | null
           is_active?: boolean
           knowledge_base?: Json
+          languages?: string[]
+          last_updated_on?: string
           main_responsibility?: string
           name?: string
           persona?: string
           personality?: string[]
+          portfolio?: Json
           price_monthly?: number
+          rating?: number
+          review_count?: number
           reviews?: Json
           role_title?: string
+          satisfaction?: number
+          skill_levels?: Json
           skills?: string[]
           slug?: string
           sort_order?: number
           status?: string
+          success_rate?: number
           system_prompt?: string | null
           tagline?: string
           target_customers?: string[]
+          tasks_completed?: number
+          team_slug?: string | null
+          tool_status?: Json
           updated_at?: string
+          verified?: boolean
+          version?: string
           workspace_input_label?: string
           workspace_input_placeholder?: string
         }
@@ -519,6 +579,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      ai_teams: {
+        Row: {
+          created_at: string
+          department_slug: string | null
+          description: string | null
+          id: string
+          name: string
+          price_monthly: number
+          slug: string
+          sort_order: number
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          department_slug?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          price_monthly?: number
+          slug: string
+          sort_order?: number
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          department_slug?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          price_monthly?: number
+          slug?: string
+          sort_order?: number
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: []
       }
       business_profiles: {
         Row: {
@@ -1137,6 +1236,7 @@ export type Database = {
           billing_cycle: string
           brand_voice: string | null
           cancelled_at: string | null
+          department_slug: string | null
           display_name: string | null
           employee_id: string
           end_date: string | null
@@ -1146,9 +1246,11 @@ export type Database = {
           plan: string
           plan_name: string
           price_monthly: number
+          scope: string
           start_date: string
           status: string
           subscription_date: string
+          team_slug: string | null
           user_id: string
           working_preferences: string | null
         }
@@ -1158,6 +1260,7 @@ export type Database = {
           billing_cycle?: string
           brand_voice?: string | null
           cancelled_at?: string | null
+          department_slug?: string | null
           display_name?: string | null
           employee_id: string
           end_date?: string | null
@@ -1167,9 +1270,11 @@ export type Database = {
           plan?: string
           plan_name?: string
           price_monthly?: number
+          scope?: string
           start_date?: string
           status?: string
           subscription_date?: string
+          team_slug?: string | null
           user_id: string
           working_preferences?: string | null
         }
@@ -1179,6 +1284,7 @@ export type Database = {
           billing_cycle?: string
           brand_voice?: string | null
           cancelled_at?: string | null
+          department_slug?: string | null
           display_name?: string | null
           employee_id?: string
           end_date?: string | null
@@ -1188,9 +1294,11 @@ export type Database = {
           plan?: string
           plan_name?: string
           price_monthly?: number
+          scope?: string
           start_date?: string
           status?: string
           subscription_date?: string
+          team_slug?: string | null
           user_id?: string
           working_preferences?: string | null
         }

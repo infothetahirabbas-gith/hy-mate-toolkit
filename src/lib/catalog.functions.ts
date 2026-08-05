@@ -8,6 +8,11 @@ export type EmployeeReview = {
   body: string;
 };
 
+export type SkillLevel = { name: string; level: string };
+export type ToolStatus = { name: string; status: string };
+export type PortfolioItem = { title: string; type: string; summary: string };
+export type EmployeeFaq = { q: string; a: string };
+
 export type CatalogEmployee = {
   id: string;
   slug: string;
@@ -25,6 +30,7 @@ export type CatalogEmployee = {
   gender: string;
   department: string;
   department_slug: string | null;
+  team_slug: string | null;
   main_responsibility: string;
   personality: string[];
   daily_tasks: string[];
@@ -32,6 +38,25 @@ export type CatalogEmployee = {
   target_customers: string[];
   integrations: string[];
   reviews: EmployeeReview[];
+  rating: number;
+  review_count: number;
+  businesses_served: number;
+  verified: boolean;
+  version: string;
+  last_updated_on: string;
+  languages: string[];
+  experience_years: number;
+  hours_saved_monthly: number;
+  cost_savings_monthly: number;
+  success_rate: number;
+  tasks_completed: number;
+  avg_completion_minutes: number;
+  satisfaction: number;
+  intro_line: string | null;
+  skill_levels: SkillLevel[];
+  tool_status: ToolStatus[];
+  portfolio: PortfolioItem[];
+  faqs: EmployeeFaq[];
 };
 
 export const listEmployees = createServerFn({ method: "GET" }).handler(async () => {
