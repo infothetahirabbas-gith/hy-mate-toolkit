@@ -420,7 +420,7 @@ export async function runActionRecord(
       user_id: userId,
       employee_id: action.employee_id,
       task_id: action.task_id,
-      tool_id: action.tool_id ?? action.connector_id,
+      tool_id: action.tool_id ?? action.connector_id ?? "unknown",
       action: action.title,
       outcome: "success",
     });
@@ -450,7 +450,7 @@ export async function runActionRecord(
       user_id: userId,
       employee_id: action.employee_id,
       task_id: action.task_id,
-      tool_id: action.tool_id ?? action.connector_id,
+      tool_id: action.tool_id ?? action.connector_id ?? "unknown",
       action: action.title,
       outcome: "failed",
     });
