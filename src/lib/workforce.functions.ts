@@ -387,6 +387,13 @@ export const runTask = createServerFn({ method: "POST" })
         content: json,
       });
 
+      try {
+        const { planAndDispatch } = await import("./action-engine.server");
+        await planAndDispatch(supabase, userId, task.id);
+      } catch (actionError) {
+        console.error("[action-engine]", actionError);
+      }
+
       await notify(supabase as never, {
         user_id: userId,
         employee_id: task.employee_id,

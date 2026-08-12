@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { needsApproval, type RiskPolicyRow } from "@/lib/action-policy";
+import type { RiskPolicyRow } from "@/lib/action-policy";
 import { RISK_LEVELS } from "@/lib/connectors";
 
 export const listTaskActions = createServerFn({ method: "GET" })
@@ -23,112 +23,8 @@ export const planTaskActions = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ taskId: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
-    const { supabase, userId } = context;
-
-    const { data: task } = await supabase
-      .from("ai_tasks")
-      .select(
-        "id, task_name, description, input, employee_id, employee:ai_employees(id, name, role_title)",
-      )
-      .eq("id", data.taskId)
-      .eq("user_id", userId)
-      .maybeSingle();
-    if (!task) throw new Error("Task not found.");
-
-    const employee = task.employee as unknown as { name: string; role_title: string } | null;
-
-    const [{ data: connections }, { data: policies }, { data: business }] = await Promise.all([
-      supabase
-        .from("user_integrations")
-        .select("connector_id, status")
-        .eq("user_id", userId)
-        .eq("status", "connected"),
-      supabase
-        .from("action_risk_policies")
-        .select("target_type, target_key, requires_approval")
-        .eq("user_id", userId),
-      supabase.from("business_profiles").select("business_name").eq("user_id", userId).maybeSingle(),
-    ]);
-
-    const connected = (connections ?? [])
-      .map((row) => row.connector_id)
-      .filter((id): id is string => Boolean(id));
-
-    if (!connected.length) return { planned: 0, awaitingApproval: 0, executed: 0, connected: 0 };
-
-    const { planActions, runActionRecord } = await import("@/lib/action-engine.server");
-    const plan = await planActions({
-      employeeName: employee?.name ?? "AI employee",
-      roleTitle: employee?.role_title ?? "specialist",
-      taskName: task.task_name,
-      brief: [task.description, task.input].filter(Boolean).join("\n") || task.task_name,
-      connectedConnectorIds: connected,
-      businessName: business?.business_name ?? null,
-    });
-
-    let awaitingApproval = 0;
-    let executed = 0;
-
-    for (const [index, action] of plan.entries()) {
-      const gated = needsApproval((policies ?? []) as RiskPolicyRow[], action.risk, action.connectorId);
-
-      const { data: row, error } = await supabase
-        .from("task_actions")
-        .insert({
-          user_id: userId,
-          task_id: task.id,
-          employee_id: task.employee_id,
-          sequence: index,
-          title: action.title,
-          description: action.description,
-          tool_id: action.toolId,
-          connector_id: action.connectorId,
-          operation: action.operation,
-          risk: action.risk,
-          params: JSON.parse(JSON.stringify(action.params)),
-          requires_approval: gated,
-          status: gated ? "awaiting_approval" : "approved",
-        })
-        .select("id, task_id, employee_id, title, tool_id, connector_id, operation, risk, params, attempts")
-        .single();
-      if (error) throw new Error(error.message);
-
-      if (gated) {
-        awaitingApproval += 1;
-        await supabase.from("approval_requests").insert({
-          user_id: userId,
-          action_id: row.id,
-          task_id: task.id,
-          employee_id: task.employee_id,
-          title: action.title,
-          reason: action.reason,
-          data_used: action.dataUsed,
-          expected_result: action.expectedResult,
-          risk: action.risk,
-          tool_id: action.toolId,
-          target: action.connectorId,
-          payload: JSON.parse(JSON.stringify(action.params)),
-        });
-        await supabase.from("notifications").insert({
-          user_id: userId,
-          employee_id: task.employee_id,
-          task_id: task.id,
-          kind: "approval_required",
-          title: `Approval needed: ${action.title}`,
-          body: action.expectedResult || action.reason || null,
-        });
-      } else {
-        const result = await runActionRecord(supabase, userId, row);
-        if (result.ok) executed += 1;
-      }
-    }
-
-    return {
-      planned: plan.length,
-      awaitingApproval,
-      executed,
-      connected: connected.length,
-    };
+    const { planAndDispatch } = await import("@/lib/action-engine.server");
+    return planAndDispatch(context.supabase, context.userId, data.taskId);
   });
 
 export const listApprovals = createServerFn({ method: "GET" })
