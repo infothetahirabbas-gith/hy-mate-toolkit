@@ -364,3 +364,108 @@ export async function executeAction(args: {
       throw new Error(`Unsupported action: ${key}`);
   }
 }
+
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
+
+export type ActionRecord = {
+  id: string;
+  task_id: string | null;
+  employee_id: string | null;
+  title: string;
+  tool_id: string | null;
+  connector_id: string | null;
+  operation: string;
+  risk: string;
+  params: unknown;
+  attempts: number;
+};
+
+/**
+ * Executes a stored action row end-to-end: runs it against the provider,
+ * records the outcome, writes the tool activity log and the audit entry.
+ */
+export async function runActionRecord(
+  supabase: SupabaseClient<Database>,
+  userId: string,
+  action: ActionRecord,
+): Promise<{ ok: boolean; summary: string }> {
+  await supabase
+    .from("task_actions")
+    .update({ status: "running", started_at: new Date().toISOString(), attempts: action.attempts + 1 })
+    .eq("id", action.id)
+    .eq("user_id", userId);
+
+  try {
+    if (!action.connector_id) throw new Error("This action has no connected tool.");
+    const outcome = await executeAction({
+      userId,
+      connectorId: action.connector_id,
+      operation: action.operation,
+      params: (action.params ?? {}) as Record<string, unknown>,
+    });
+
+    await supabase
+      .from("task_actions")
+      .update({
+        status: "succeeded",
+        result: JSON.parse(JSON.stringify({ summary: outcome.summary, data: outcome.data })),
+        error: null,
+        completed_at: new Date().toISOString(),
+      })
+      .eq("id", action.id)
+      .eq("user_id", userId);
+
+    await supabase.from("tool_activity_logs").insert({
+      user_id: userId,
+      employee_id: action.employee_id,
+      task_id: action.task_id,
+      tool_id: action.tool_id ?? action.connector_id,
+      action: action.title,
+      outcome: "success",
+    });
+
+    await supabase.from("audit_logs").insert({
+      user_id: userId,
+      actor_type: "ai",
+      action: `action.${action.operation}`,
+      resource_type: "task_action",
+      resource_id: action.id,
+      new_value: JSON.parse(JSON.stringify({ summary: outcome.summary })),
+      metadata: JSON.parse(JSON.stringify({ connector: action.connector_id, title: action.title })),
+      risk: action.risk,
+      result: "success",
+    });
+
+    return { ok: true, summary: outcome.summary };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    await supabase
+      .from("task_actions")
+      .update({ status: "failed", error: message, completed_at: new Date().toISOString() })
+      .eq("id", action.id)
+      .eq("user_id", userId);
+
+    await supabase.from("tool_activity_logs").insert({
+      user_id: userId,
+      employee_id: action.employee_id,
+      task_id: action.task_id,
+      tool_id: action.tool_id ?? action.connector_id,
+      action: action.title,
+      outcome: "failed",
+    });
+
+    await supabase.from("audit_logs").insert({
+      user_id: userId,
+      actor_type: "ai",
+      action: `action.${action.operation}`,
+      resource_type: "task_action",
+      resource_id: action.id,
+      metadata: JSON.parse(JSON.stringify({ connector: action.connector_id, error: message })),
+      risk: action.risk,
+      result: "failed",
+    });
+
+    return { ok: false, summary: message };
+  }
+}
