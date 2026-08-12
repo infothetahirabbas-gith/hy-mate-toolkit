@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      action_risk_policies: {
+        Row: {
+          created_at: string
+          id: string
+          requires_approval: boolean
+          target_key: string
+          target_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          requires_approval?: boolean
+          target_key: string
+          target_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          requires_approval?: boolean
+          target_key?: string
+          target_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       agent_conversations: {
         Row: {
           created_at: string
@@ -619,6 +649,166 @@ export type Database = {
         }
         Relationships: []
       }
+      app_user_connections: {
+        Row: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connection_key_ciphertext?: string
+          connector_id?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      approval_requests: {
+        Row: {
+          action_id: string | null
+          created_at: string
+          data_used: string | null
+          decided_at: string | null
+          decision_note: string | null
+          employee_id: string | null
+          expected_result: string | null
+          id: string
+          payload: Json
+          reason: string | null
+          risk: string
+          status: string
+          target: string | null
+          task_id: string | null
+          title: string
+          tool_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_id?: string | null
+          created_at?: string
+          data_used?: string | null
+          decided_at?: string | null
+          decision_note?: string | null
+          employee_id?: string | null
+          expected_result?: string | null
+          id?: string
+          payload?: Json
+          reason?: string | null
+          risk?: string
+          status?: string
+          target?: string | null
+          task_id?: string | null
+          title: string
+          tool_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_id?: string | null
+          created_at?: string
+          data_used?: string | null
+          decided_at?: string | null
+          decision_note?: string | null
+          employee_id?: string | null
+          expected_result?: string | null
+          id?: string
+          payload?: Json
+          reason?: string | null
+          risk?: string
+          status?: string
+          target?: string | null
+          task_id?: string | null
+          title?: string
+          tool_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_requests_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "task_actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_requests_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_requests_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_logs: {
+        Row: {
+          action: string
+          actor_label: string | null
+          actor_type: string
+          created_at: string
+          id: string
+          metadata: Json
+          new_value: Json | null
+          previous_value: Json | null
+          resource_id: string | null
+          resource_type: string
+          result: string
+          risk: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          actor_label?: string | null
+          actor_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          new_value?: Json | null
+          previous_value?: Json | null
+          resource_id?: string | null
+          resource_type: string
+          result?: string
+          risk?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          actor_label?: string | null
+          actor_type?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          new_value?: Json | null
+          previous_value?: Json | null
+          resource_id?: string | null
+          resource_type?: string
+          result?: string
+          risk?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_profiles: {
         Row: {
           brand_info: string | null
@@ -1069,6 +1259,93 @@ export type Database = {
         }
         Relationships: []
       }
+      task_actions: {
+        Row: {
+          attempts: number
+          completed_at: string | null
+          connector_id: string | null
+          created_at: string
+          description: string | null
+          employee_id: string | null
+          error: string | null
+          id: string
+          operation: string
+          params: Json
+          requires_approval: boolean
+          result: Json | null
+          risk: string
+          sequence: number
+          started_at: string | null
+          status: string
+          task_id: string | null
+          title: string
+          tool_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          completed_at?: string | null
+          connector_id?: string | null
+          created_at?: string
+          description?: string | null
+          employee_id?: string | null
+          error?: string | null
+          id?: string
+          operation?: string
+          params?: Json
+          requires_approval?: boolean
+          result?: Json | null
+          risk?: string
+          sequence?: number
+          started_at?: string | null
+          status?: string
+          task_id?: string | null
+          title: string
+          tool_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          completed_at?: string | null
+          connector_id?: string | null
+          created_at?: string
+          description?: string | null
+          employee_id?: string | null
+          error?: string | null
+          id?: string
+          operation?: string
+          params?: Json
+          requires_approval?: boolean
+          result?: Json | null
+          risk?: string
+          sequence?: number
+          started_at?: string | null
+          status?: string
+          task_id?: string | null
+          title?: string
+          tool_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_actions_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_actions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       task_feedback: {
         Row: {
           correction: string | null
@@ -1177,9 +1454,14 @@ export type Database = {
           account_label: string | null
           category: string
           connected_at: string
+          connector_id: string | null
           created_at: string
           id: string
+          last_error: string | null
+          last_sync_at: string | null
+          permission_level: string
           provider: string
+          scopes: string[]
           status: string
           updated_at: string
           user_id: string
@@ -1188,9 +1470,14 @@ export type Database = {
           account_label?: string | null
           category: string
           connected_at?: string
+          connector_id?: string | null
           created_at?: string
           id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          permission_level?: string
           provider: string
+          scopes?: string[]
           status?: string
           updated_at?: string
           user_id: string
@@ -1199,9 +1486,14 @@ export type Database = {
           account_label?: string | null
           category?: string
           connected_at?: string
+          connector_id?: string | null
           created_at?: string
           id?: string
+          last_error?: string | null
+          last_sync_at?: string | null
+          permission_level?: string
           provider?: string
+          scopes?: string[]
           status?: string
           updated_at?: string
           user_id?: string
