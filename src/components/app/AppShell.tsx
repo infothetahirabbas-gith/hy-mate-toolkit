@@ -9,6 +9,7 @@ import {
 
   CreditCard,
   FileText,
+  Landmark,
   LayoutDashboard,
   ListChecks,
   LogOut,
@@ -37,6 +38,7 @@ const NAV = [
   { label: "Tasks", to: "/tasks", icon: ListChecks },
   { label: "Team Projects", to: "/teams", icon: Network },
   { label: "Workflows", to: "/workflows", icon: Workflow },
+  { label: "Finance Department", to: "/finance", icon: Landmark },
   { label: "Reports", to: "/reports", icon: FileText },
   { label: "Knowledge & Memory", to: "/knowledge", icon: Brain },
   { label: "Memory Control", to: "/memory", icon: BrainCircuit },

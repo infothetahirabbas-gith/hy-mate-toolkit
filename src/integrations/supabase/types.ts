@@ -1014,6 +1014,549 @@ export type Database = {
           },
         ]
       }
+      fin_accounts: {
+        Row: {
+          account_type: string
+          balance: number
+          code: string | null
+          created_at: string
+          currency: string
+          id: string
+          institution: string | null
+          is_active: boolean
+          name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_type?: string
+          balance?: number
+          code?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          institution?: string | null
+          is_active?: boolean
+          name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_type?: string
+          balance?: number
+          code?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          institution?: string | null
+          is_active?: boolean
+          name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fin_budgets: {
+        Row: {
+          actual: number
+          category: string
+          created_at: string
+          currency: string
+          department: string | null
+          id: string
+          period_month: string
+          planned: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          actual?: number
+          category: string
+          created_at?: string
+          currency?: string
+          department?: string | null
+          id?: string
+          period_month: string
+          planned?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          actual?: number
+          category?: string
+          created_at?: string
+          currency?: string
+          department?: string | null
+          id?: string
+          period_month?: string
+          planned?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fin_compliance_checks: {
+        Row: {
+          control: string
+          created_at: string
+          description: string | null
+          framework: string
+          id: string
+          last_checked_at: string | null
+          notes: string | null
+          severity: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          control: string
+          created_at?: string
+          description?: string | null
+          framework?: string
+          id?: string
+          last_checked_at?: string | null
+          notes?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          control?: string
+          created_at?: string
+          description?: string | null
+          framework?: string
+          id?: string
+          last_checked_at?: string | null
+          notes?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fin_expenses: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          currency: string
+          department: string | null
+          expense_date: string
+          id: string
+          notes: string | null
+          recurring: boolean
+          status: string
+          updated_at: string
+          user_id: string
+          vendor: string
+        }
+        Insert: {
+          amount?: number
+          category?: string
+          created_at?: string
+          currency?: string
+          department?: string | null
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          recurring?: boolean
+          status?: string
+          updated_at?: string
+          user_id: string
+          vendor: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          currency?: string
+          department?: string | null
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          recurring?: boolean
+          status?: string
+          updated_at?: string
+          user_id?: string
+          vendor?: string
+        }
+        Relationships: []
+      }
+      fin_forecasts: {
+        Row: {
+          amount: number
+          confidence: number
+          created_at: string
+          generated_by: string
+          high: number | null
+          horizon_month: string
+          id: string
+          low: number | null
+          method: string
+          metric: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          confidence?: number
+          created_at?: string
+          generated_by?: string
+          high?: number | null
+          horizon_month: string
+          id?: string
+          low?: number | null
+          method?: string
+          metric: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          confidence?: number
+          created_at?: string
+          generated_by?: string
+          high?: number | null
+          horizon_month?: string
+          id?: string
+          low?: number | null
+          method?: string
+          metric?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fin_goal_steps: {
+        Row: {
+          created_at: string
+          detail: string | null
+          expected_impact: number
+          goal_id: string
+          id: string
+          owner_role: string
+          requires_approval: boolean
+          result: string | null
+          risk: string
+          sequence: number
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string | null
+          expected_impact?: number
+          goal_id: string
+          id?: string
+          owner_role?: string
+          requires_approval?: boolean
+          result?: string | null
+          risk?: string
+          sequence?: number
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string | null
+          expected_impact?: number
+          goal_id?: string
+          id?: string
+          owner_role?: string
+          requires_approval?: boolean
+          result?: string | null
+          risk?: string
+          sequence?: number
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fin_goal_steps_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "fin_goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fin_goals: {
+        Row: {
+          autonomy_level: string
+          baseline_amount: number
+          created_at: string
+          current_amount: number
+          description: string | null
+          due_date: string | null
+          id: string
+          progress: number
+          realized_savings: number
+          status: string
+          target_change_pct: number
+          target_metric: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          autonomy_level?: string
+          baseline_amount?: number
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          progress?: number
+          realized_savings?: number
+          status?: string
+          target_change_pct?: number
+          target_metric?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          autonomy_level?: string
+          baseline_amount?: number
+          created_at?: string
+          current_amount?: number
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          progress?: number
+          realized_savings?: number
+          status?: string
+          target_change_pct?: number
+          target_metric?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fin_insights: {
+        Row: {
+          confidence: number
+          created_at: string
+          detail: string | null
+          employee_id: string | null
+          evidence: Json
+          id: string
+          impact_amount: number
+          kind: string
+          severity: string
+          source: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+          verified: boolean
+        }
+        Insert: {
+          confidence?: number
+          created_at?: string
+          detail?: string | null
+          employee_id?: string | null
+          evidence?: Json
+          id?: string
+          impact_amount?: number
+          kind?: string
+          severity?: string
+          source?: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+          verified?: boolean
+        }
+        Update: {
+          confidence?: number
+          created_at?: string
+          detail?: string | null
+          employee_id?: string | null
+          evidence?: Json
+          id?: string
+          impact_amount?: number
+          kind?: string
+          severity?: string
+          source?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+          verified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fin_insights_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fin_invoices: {
+        Row: {
+          amount: number
+          counterparty: string
+          created_at: string
+          currency: string
+          due_date: string | null
+          id: string
+          issue_date: string
+          kind: string
+          notes: string | null
+          number: string
+          paid_at: string | null
+          status: string
+          tax_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          counterparty: string
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          issue_date?: string
+          kind?: string
+          notes?: string | null
+          number: string
+          paid_at?: string | null
+          status?: string
+          tax_amount?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          counterparty?: string
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          issue_date?: string
+          kind?: string
+          notes?: string | null
+          number?: string
+          paid_at?: string | null
+          status?: string
+          tax_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fin_settings: {
+        Row: {
+          approval_threshold: number
+          autonomy_level: string
+          base_currency: string
+          created_at: string
+          fiscal_year_start: number
+          require_approval_high_risk: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          approval_threshold?: number
+          autonomy_level?: string
+          base_currency?: string
+          created_at?: string
+          fiscal_year_start?: number
+          require_approval_high_risk?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          approval_threshold?: number
+          autonomy_level?: string
+          base_currency?: string
+          created_at?: string
+          fiscal_year_start?: number
+          require_approval_high_risk?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      fin_transactions: {
+        Row: {
+          account_id: string | null
+          amount: number
+          anomaly_reason: string | null
+          category: string
+          counterparty: string | null
+          created_at: string
+          currency: string
+          description: string
+          direction: string
+          id: string
+          is_anomaly: boolean
+          metadata: Json
+          source: string
+          status: string
+          txn_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_id?: string | null
+          amount?: number
+          anomaly_reason?: string | null
+          category?: string
+          counterparty?: string | null
+          created_at?: string
+          currency?: string
+          description: string
+          direction?: string
+          id?: string
+          is_anomaly?: boolean
+          metadata?: Json
+          source?: string
+          status?: string
+          txn_date?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_id?: string | null
+          amount?: number
+          anomaly_reason?: string | null
+          category?: string
+          counterparty?: string | null
+          created_at?: string
+          currency?: string
+          description?: string
+          direction?: string
+          id?: string
+          is_anomaly?: boolean
+          metadata?: Json
+          source?: string
+          status?: string
+          txn_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fin_transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "fin_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       knowledge_documents: {
         Row: {
           content: string
