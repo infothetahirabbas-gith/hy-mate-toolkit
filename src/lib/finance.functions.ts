@@ -123,19 +123,20 @@ export const saveTransaction = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const payload = { ...data, counterparty: data.counterparty || null, user_id: userId, source: "manual" };
+    const { id, ...rest } = data;
+    const payload = { ...rest, counterparty: data.counterparty || null, user_id: userId, source: "manual" };
     const { logFinance } = await import("@/lib/finance-audit.server");
 
     if (data.id) {
       const { error } = await supabase.from("fin_transactions").update(payload).eq("id", data.id).eq("user_id", userId);
       if (error) throw new Error(error.message);
-      await logFinance(supabase, userId, { action: "finance.transaction_updated", resourceType: "fin_transaction", resourceId: data.id, next: payload });
+      await logFinance(supabase, userId, { action: "finance.transaction_updated", resourceType: "fin_transaction", resourceId: id ?? null, next: payload });
       return { ok: true, id: data.id };
     }
 
     const { data: row, error } = await supabase.from("fin_transactions").insert(payload).select("id").maybeSingle();
     if (error) throw new Error(error.message);
-    await logFinance(supabase, userId, { action: "finance.transaction_created", resourceType: "fin_transaction", resourceId: row?.id, next: payload });
+    await logFinance(supabase, userId, { action: "finance.transaction_created", resourceType: "fin_transaction", resourceId: row?.id ?? null, next: payload });
     return { ok: true, id: row?.id ?? null };
   });
 
@@ -221,13 +222,14 @@ export const saveFinanceAccount = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const payload = { ...data, institution: data.institution || null, user_id: userId };
+    const { id, ...rest } = data;
+    const payload = { ...rest, institution: data.institution || null, user_id: userId };
     const { error } = data.id
       ? await supabase.from("fin_accounts").update(payload).eq("id", data.id).eq("user_id", userId)
       : await supabase.from("fin_accounts").insert(payload);
     if (error) throw new Error(error.message);
     const { logFinance } = await import("@/lib/finance-audit.server");
-    await logFinance(supabase, userId, { action: data.id ? "finance.account_updated" : "finance.account_created", resourceType: "fin_account", resourceId: data.id, next: payload });
+    await logFinance(supabase, userId, { action: id ? "finance.account_updated" : "finance.account_created", resourceType: "fin_account", resourceId: id ?? null, next: payload });
     return { ok: true };
   });
 
@@ -265,8 +267,9 @@ export const saveInvoice = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    const { id, ...rest } = data;
     const payload = {
-      ...data,
+      ...rest,
       notes: data.notes || null,
       paid_at: data.status === "paid" ? new Date().toISOString() : null,
       user_id: userId,
@@ -277,9 +280,9 @@ export const saveInvoice = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     const { logFinance } = await import("@/lib/finance-audit.server");
     await logFinance(supabase, userId, {
-      action: data.id ? "finance.invoice_updated" : "finance.invoice_created",
+      action: id ? "finance.invoice_updated" : "finance.invoice_created",
       resourceType: "fin_invoice",
-      resourceId: data.id,
+      resourceId: id ?? null,
       next: payload,
       risk: "medium",
     });
@@ -319,13 +322,14 @@ export const saveExpense = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const payload = { ...data, department: data.department || null, notes: data.notes || null, user_id: userId };
+    const { id, ...rest } = data;
+    const payload = { ...rest, department: data.department || null, notes: data.notes || null, user_id: userId };
     const { error } = data.id
       ? await supabase.from("fin_expenses").update(payload).eq("id", data.id).eq("user_id", userId)
       : await supabase.from("fin_expenses").insert({ ...payload, status: "pending" });
     if (error) throw new Error(error.message);
     const { logFinance } = await import("@/lib/finance-audit.server");
-    await logFinance(supabase, userId, { action: data.id ? "finance.expense_updated" : "finance.expense_created", resourceType: "fin_expense", resourceId: data.id, next: payload });
+    await logFinance(supabase, userId, { action: id ? "finance.expense_updated" : "finance.expense_created", resourceType: "fin_expense", resourceId: id ?? null, next: payload });
     return { ok: true };
   });
 
