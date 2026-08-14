@@ -854,6 +854,145 @@ export type Database = {
         }
         Relationships: []
       }
+      company_goal_steps: {
+        Row: {
+          created_at: string
+          department_slug: string | null
+          detail: string | null
+          employee_id: string | null
+          expected_outcome: string | null
+          goal_id: string
+          id: string
+          owner_role: string
+          requires_approval: boolean
+          result: string | null
+          risk: string
+          sequence: number
+          status: string
+          task_id: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          department_slug?: string | null
+          detail?: string | null
+          employee_id?: string | null
+          expected_outcome?: string | null
+          goal_id: string
+          id?: string
+          owner_role?: string
+          requires_approval?: boolean
+          result?: string | null
+          risk?: string
+          sequence?: number
+          status?: string
+          task_id?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          department_slug?: string | null
+          detail?: string | null
+          employee_id?: string | null
+          expected_outcome?: string | null
+          goal_id?: string
+          id?: string
+          owner_role?: string
+          requires_approval?: boolean
+          result?: string | null
+          risk?: string
+          sequence?: number
+          status?: string
+          task_id?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_goal_steps_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "ai_employees"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_goal_steps_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "company_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_goal_steps_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "ai_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_goals: {
+        Row: {
+          autonomy_level: string
+          budget: number
+          context: string | null
+          created_at: string
+          currency: string
+          deadline: string | null
+          goal: string
+          id: string
+          kpis: Json
+          progress: number
+          risks: Json
+          status: string
+          strategy: Json
+          summary: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          autonomy_level?: string
+          budget?: number
+          context?: string | null
+          created_at?: string
+          currency?: string
+          deadline?: string | null
+          goal: string
+          id?: string
+          kpis?: Json
+          progress?: number
+          risks?: Json
+          status?: string
+          strategy?: Json
+          summary?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          autonomy_level?: string
+          budget?: number
+          context?: string | null
+          created_at?: string
+          currency?: string
+          deadline?: string | null
+          goal?: string
+          id?: string
+          kpis?: Json
+          progress?: number
+          risks?: Json
+          status?: string
+          strategy?: Json
+          summary?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       departments: {
         Row: {
           created_at: string
