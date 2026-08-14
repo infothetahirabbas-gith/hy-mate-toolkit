@@ -8,6 +8,7 @@ import {
   Gauge,
 
   CreditCard,
+  Crown,
   FileText,
   Landmark,
   LayoutDashboard,
@@ -33,6 +34,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
+  { label: "CEO Command Center", to: "/command-center", icon: Crown },
   { label: "My AI Employees", to: "/my-employees", icon: Users },
   { label: "Marketplace", to: "/marketplace", icon: Store },
   { label: "Tasks", to: "/tasks", icon: ListChecks },
