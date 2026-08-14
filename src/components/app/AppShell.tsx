@@ -8,6 +8,7 @@ import {
   Gauge,
 
   CreditCard,
+  Crown,
   FileText,
   Landmark,
   LayoutDashboard,
