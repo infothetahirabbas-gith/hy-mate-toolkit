@@ -30,9 +30,9 @@ export type CompanyGoal = {
   status: string;
   progress: number;
   summary: string | null;
-  strategy: unknown;
-  risks: unknown;
-  kpis: unknown;
+  strategy: { phase: string; focus: string }[];
+  risks: string[];
+  kpis: { name: string; target: string }[];
   created_at: string;
 };
 
@@ -72,7 +72,10 @@ export const listCompanyGoals = createServerFn({ method: "GET" })
 
     return {
       goals: (goals ?? []).map((goal) => ({
-        ...(goal as unknown as CompanyGoal),
+        ...(goal as unknown as Omit<CompanyGoal, "strategy" | "risks" | "kpis">),
+        strategy: (goal.strategy ?? []) as CompanyGoal["strategy"],
+        risks: (goal.risks ?? []) as CompanyGoal["risks"],
+        kpis: (goal.kpis ?? []) as CompanyGoal["kpis"],
         steps: ((steps ?? []) as unknown as (GoalStep & { goal_id: string })[]).filter(
           (s) => s.goal_id === goal.id,
         ),
