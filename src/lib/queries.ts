@@ -200,3 +200,23 @@ export const competitorsQuery = queryOptions({
   queryKey: ["competitors"],
   queryFn: () => listCompetitors(),
 });
+
+import { getEmployeeRoleProfile, listCapabilities, matchEmployeesForCapability } from "./employee-roles.functions";
+
+export const employeeRoleProfileQuery = (slug: string) =>
+  queryOptions({
+    queryKey: ["employee-role-profile", slug],
+    queryFn: () => getEmployeeRoleProfile({ data: { slug } }),
+  });
+
+export const capabilitiesQuery = queryOptions({
+  queryKey: ["capabilities"],
+  queryFn: () => listCapabilities(),
+  staleTime: 5 * 60 * 1000,
+});
+
+export const capabilityMatchesQuery = (capabilitySlug: string) =>
+  queryOptions({
+    queryKey: ["capability-matches", capabilitySlug],
+    queryFn: () => matchEmployeesForCapability({ data: { capabilitySlug } }),
+  });
