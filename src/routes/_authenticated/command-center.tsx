@@ -6,9 +6,11 @@ import {
   AlertTriangle,
   CheckCircle2,
   Crown,
+  Info,
   Loader2,
   Play,
   Send,
+  Settings2,
   ShieldAlert,
   Target,
   Trash2,
@@ -66,6 +68,13 @@ const STATUS_STYLES: Record<string, string> = {
   blocked: "bg-destructive/10 text-destructive",
   skipped: "bg-muted text-muted-foreground",
 };
+
+function formatCapability(slug: string) {
+  return slug
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
 
 const AUTONOMY = [
   { value: "suggest", label: "Suggest only", hint: "Every step waits for you" },
@@ -392,7 +401,12 @@ function CommandCenterPage() {
                             >
                               {step.status}
                             </span>
-                            {step.requires_approval && step.status === "pending" ? (
+                            {step.required_capability_slug ? (
+                          <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold text-muted-foreground">
+                            {formatCapability(step.required_capability_slug)}
+                          </span>
+                        ) : null}
+                        {step.requires_approval && step.status === "pending" ? (
                               <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-amber-600">
                                 <ShieldAlert className="size-3" />
                                 Needs your approval
@@ -406,6 +420,31 @@ function CommandCenterPage() {
                             <p className="mt-1 text-xs text-muted-foreground">
                               Outcome: {step.expected_outcome}
                             </p>
+                          ) : null}
+                          {step.dispatch_reason ? (
+                            <p className="mt-2 flex items-start gap-1.5 text-xs text-muted-foreground">
+                              <Info className="mt-0.5 size-3.5 shrink-0" />
+                              <span>{step.dispatch_reason}</span>
+                            </p>
+                          ) : null}
+                          {step.status === "blocked" && step.blocked_reason ? (
+                            <div className="mt-2 rounded-lg border border-destructive/20 bg-destructive/5 p-3">
+                              <p className="flex items-start gap-1.5 text-xs font-medium text-destructive">
+                                <Settings2 className="mt-0.5 size-3.5 shrink-0" />
+                                <span>Configuration required: {step.blocked_reason}</span>
+                              </p>
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                <Button asChild size="sm" variant="outline">
+                                  <Link to="/marketplace">Hire / activate employee</Link>
+                                </Button>
+                                <Button asChild size="sm" variant="outline">
+                                  <Link to="/integrations">Connect integration</Link>
+                                </Button>
+                                <Button asChild size="sm" variant="outline">
+                                  <Link to="/tools">Grant tool permission</Link>
+                                </Button>
+                              </div>
+                            </div>
                           ) : null}
                         </div>
 
@@ -446,7 +485,7 @@ function CommandCenterPage() {
                           </Button>
                         ) : null}
 
-                        {step.employee && !step.task_id ? (
+                        {step.employee && !step.task_id && step.status !== "blocked" ? (
                           <Button
                             size="sm"
                             disabled={
