@@ -5,8 +5,8 @@ import {
   BarChart3,
   Bot,
   Brain,
+  Building2,
   Gauge,
-
   CreditCard,
   Crown,
   FileText,
@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { label: "Dashboard", to: "/dashboard", icon: LayoutDashboard },
+  { label: "Company Brain", to: "/company-brain", icon: Building2 },
   { label: "CEO Command Center", to: "/command-center", icon: Crown },
   { label: "My AI Employees", to: "/my-employees", icon: Users },
   { label: "Marketplace", to: "/marketplace", icon: Store },
@@ -51,8 +52,6 @@ const NAV = [
   { label: "Integrations", to: "/integrations", icon: Plug },
   { label: "Settings", to: "/settings", icon: Settings },
 ] as const;
-
-
 
 export function AppShell({
   title,
