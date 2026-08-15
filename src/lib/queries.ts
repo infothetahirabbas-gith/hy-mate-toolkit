@@ -187,3 +187,16 @@ export const categoriesQuery = queryOptions({
   queryFn: () => listCategories(),
   staleTime: 10 * 60 * 1000,
 });
+
+
+  import { getCompanyBrainProfile, listCompetitors } from "./company-brain.functions";
+
+export const companyBrainQuery = queryOptions({
+  queryKey: ["company-brain"],
+  queryFn: () => getCompanyBrainProfile(),
+});
+
+export const competitorsQuery = queryOptions({
+  queryKey: ["competitors"],
+  queryFn: () => listCompetitors(),
+});
