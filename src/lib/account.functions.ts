@@ -136,7 +136,7 @@ export const hireEmployee = createServerFn({ method: "POST" })
 
     const { data: employee, error: employeeError } = await supabase
       .from("ai_employees")
-      .select("id, slug, price_monthly")
+      .select("id, slug, price_monthly, department_slug, team_slug")
       .eq("slug", data.slug)
       .eq("is_active", true)
       .maybeSingle();
@@ -144,6 +144,9 @@ export const hireEmployee = createServerFn({ method: "POST" })
     if (employeeError) throw new Error(employeeError.message);
     if (!employee) throw new Error("That AI employee is not available.");
 
+    // Snapshot the structured role assignment (department/team) onto the
+    // hired instance itself, so the roster always reflects the real
+    // designation the employee was hired under, never a generic record.
     const { error } = await supabase.from("user_subscriptions").upsert(
       {
         user_id: userId,
@@ -154,6 +157,8 @@ export const hireEmployee = createServerFn({ method: "POST" })
         price_monthly: employee.price_monthly,
         amount: employee.price_monthly,
         billing_cycle: "monthly",
+        department_slug: employee.department_slug,
+        team_slug: employee.team_slug,
         start_date: new Date().toISOString(),
         end_date: null,
         cancelled_at: null,
