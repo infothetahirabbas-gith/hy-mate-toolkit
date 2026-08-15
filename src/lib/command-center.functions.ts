@@ -1,6 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { z } from "zod";
+import { SENIORITY_AUTHORITY } from "./command-center.server";
+
+export type DispatchAlternative = { name: string; openTasks?: number; reasons?: string[] };
 
 export type GoalStep = {
   id: string;
@@ -16,6 +19,13 @@ export type GoalStep = {
   expected_outcome: string | null;
   status: string;
   result: string | null;
+  required_capability_slug: string | null;
+  min_seniority_level: string | null;
+  min_authority_level: number | null;
+  complexity: string;
+  dispatch_reason: string | null;
+  blocked_reason: string | null;
+  dispatch_alternatives: DispatchAlternative[];
   employee: { id: string; name: string; slug: string; role_title: string; accent: string } | null;
 };
 
@@ -37,7 +47,7 @@ export type CompanyGoal = {
 };
 
 const STEP_FIELDS =
-  "id, sequence, title, detail, department_slug, owner_role, employee_id, task_id, risk, requires_approval, expected_outcome, status, result, employee:ai_employees(id, name, slug, role_title, accent)";
+  "id, sequence, title, detail, department_slug, owner_role, employee_id, task_id, risk, requires_approval, expected_outcome, status, result, required_capability_slug, min_seniority_level, min_authority_level, complexity, dispatch_reason, blocked_reason, dispatch_alternatives, employee:ai_employees(id, name, slug, role_title, accent)";
 const GOAL_FIELDS =
   "id, goal, context, budget, currency, deadline, autonomy_level, status, progress, summary, strategy, risks, kpis, created_at";
 
@@ -109,15 +119,17 @@ export const createCompanyGoal = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    const [{ data: subs }, { data: business }, { data: departments }] = await Promise.all([
-      supabase
-        .from("user_subscriptions")
-        .select("status, employee:ai_employees(id, slug, name, role_title, department, skills)")
-        .eq("user_id", userId)
-        .eq("status", "active"),
-      supabase.from("business_profiles").select("*").eq("user_id", userId).maybeSingle(),
-      supabase.from("departments").select("slug, name").order("sort_order", { ascending: true }),
-    ]);
+    const [{ data: subs }, { data: business }, { data: departments }, { data: capabilityRows }] =
+      await Promise.all([
+        supabase
+          .from("user_subscriptions")
+          .select("status, employee:ai_employees(id, slug, name, role_title, department, skills)")
+          .eq("user_id", userId)
+          .eq("status", "active"),
+        supabase.from("business_profiles").select("*").eq("user_id", userId).maybeSingle(),
+        supabase.from("departments").select("slug, name").order("sort_order", { ascending: true }),
+        (supabase.from("ai_capabilities") as any).select("slug, name, department_slug").order("name"),
+      ]);
 
     const roster = (subs ?? [])
       .map((s) => s.employee as unknown as {
@@ -133,6 +145,12 @@ export const createCompanyGoal = createServerFn({ method: "POST" })
     if (roster.length === 0) {
       throw new Error("Hire and activate at least one AI employee before setting a company goal.");
     }
+
+    const capabilities = ((capabilityRows ?? []) as any[]).map((c) => ({
+      slug: c.slug as string,
+      name: c.name as string,
+      departmentSlug: c.department_slug as string | null,
+    }));
 
     const { planGoal } = await import("./command-center.server");
     const plan = await planGoal({
@@ -151,6 +169,7 @@ export const createCompanyGoal = createServerFn({ method: "POST" })
         skills: (r.skills ?? []).slice(0, 8),
       })),
       departments: (departments ?? []) as { slug: string; name: string }[],
+      capabilities,
     });
 
     const { data: goalRow, error: goalError } = await supabase
@@ -174,8 +193,73 @@ export const createCompanyGoal = createServerFn({ method: "POST" })
     if (goalError) throw new Error(goalError.message);
 
     const bySlug = new Map(roster.map((r) => [r.slug, r.id]));
+
+    // For every step the AI Manager mapped to a real capability, run the full
+    // capability -> seniority -> authority -> tool -> permission ->
+    // integration -> workload validation chain server-side. The language
+    // model only PROPOSED a capability and an employee guess above — this is
+    // the step that actually decides who (if anyone) is qualified.
+    const { matchCapabilityCandidates, explainAssignment } = await import("./role-dispatch.server");
+
+    const resolvedSteps = await Promise.all(
+      plan.steps.map(async (step) => {
+        if (!step.requiredCapability) {
+          // No capability in the registry covers this step yet. Fall back to
+          // the roster pick the planner already validated against ROSTER.
+          return {
+            ...step,
+            status: "pending" as const,
+            dispatchReason: null as string | null,
+            blockedReason: null as string | null,
+            alternatives: [] as DispatchAlternative[],
+            minAuthorityLevel: null as number | null,
+          };
+        }
+
+        const minAuthorityLevel = SENIORITY_AUTHORITY[step.minSeniorityLevel] ?? null;
+        const result = await matchCapabilityCandidates(supabase, userId, {
+          capabilitySlug: step.requiredCapability,
+          minAuthorityLevel,
+        });
+        const reason = explainAssignment(result);
+
+        if (result.best) {
+          return {
+            ...step,
+            employeeSlug: result.best.slug,
+            status: "pending" as const,
+            dispatchReason: reason,
+            blockedReason: null as string | null,
+            alternatives: result.qualified.slice(1, 4).map((c) => ({
+              name: c.name,
+              openTasks: c.openTasks,
+            })),
+            minAuthorityLevel,
+          };
+        }
+
+        const hasHolders = result.qualified.length + result.blocked.length > 0;
+        const blockedReason = hasHolders
+          ? reason
+          : `No hired employee holds the ${result.capability?.name ?? step.requiredCapability} capability yet. Hire or activate a qualified employee, or connect the required integration.`;
+
+        return {
+          ...step,
+          employeeSlug: result.blocked[0]?.slug ?? null,
+          status: "blocked" as const,
+          dispatchReason: reason,
+          blockedReason,
+          alternatives: result.blocked.slice(0, 4).map((c) => ({
+            name: c.name,
+            reasons: c.blockedReasons,
+          })),
+          minAuthorityLevel,
+        };
+      }),
+    );
+
     const { error: stepsError } = await supabase.from("company_goal_steps").insert(
-      plan.steps.map((step, index) => ({
+      resolvedSteps.map((step, index) => ({
         goal_id: goalRow.id,
         user_id: userId,
         sequence: index + 1,
@@ -188,6 +272,14 @@ export const createCompanyGoal = createServerFn({ method: "POST" })
         requires_approval:
           data.autonomyLevel === "suggest" ? true : step.requiresApproval || step.risk === "high",
         expected_outcome: step.expectedOutcome,
+        required_capability_slug: step.requiredCapability,
+        min_seniority_level: step.minSeniorityLevel,
+        min_authority_level: step.minAuthorityLevel,
+        complexity: step.complexity,
+        status: step.status,
+        dispatch_reason: step.dispatchReason,
+        blocked_reason: step.blockedReason,
+        dispatch_alternatives: step.alternatives,
       })),
     );
 
@@ -203,7 +295,9 @@ export const dispatchGoalStep = createServerFn({ method: "POST" })
 
     const { data: step, error } = await supabase
       .from("company_goal_steps")
-      .select("id, goal_id, title, detail, expected_outcome, employee_id, task_id, status, risk, requires_approval")
+      .select(
+        "id, goal_id, title, detail, expected_outcome, employee_id, task_id, status, risk, requires_approval, required_capability_slug, min_authority_level",
+      )
       .eq("id", data.stepId)
       .eq("user_id", userId)
       .maybeSingle();
@@ -211,6 +305,11 @@ export const dispatchGoalStep = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     if (!step) throw new Error("Step not found.");
     if (step.task_id) throw new Error("This step already has a task.");
+    if (step.status === "blocked") {
+      throw new Error(
+        "This step is blocked. Resolve the configuration issue (hire/activate an employee, connect an integration, or grant a permission) before dispatching it.",
+      );
+    }
     if (!step.employee_id) throw new Error("Assign an AI employee to this step first.");
 
     const { data: sub } = await supabase
@@ -222,6 +321,30 @@ export const dispatchGoalStep = createServerFn({ method: "POST" })
 
     if (!sub || sub.status !== "active") {
       throw new Error("That AI employee is not on your active roster.");
+    }
+
+    // Re-validate against the real role/capability/authority/tool system —
+    // conditions (permissions, integrations, workload) can change between
+    // planning time and dispatch time.
+    if (step.required_capability_slug) {
+      const { matchCapabilityCandidates } = await import("./role-dispatch.server");
+      const result = await matchCapabilityCandidates(supabase, userId, {
+        capabilitySlug: step.required_capability_slug,
+        minAuthorityLevel: step.min_authority_level ?? null,
+      });
+      const stillQualifies = result.qualified.some((c) => c.employeeId === step.employee_id);
+      if (!stillQualifies) {
+        const blocking = result.blocked.find((c) => c.employeeId === step.employee_id);
+        const reason =
+          blocking?.blockedReasons.join(" ") ??
+          "This employee no longer qualifies for the required capability.";
+        await supabase
+          .from("company_goal_steps")
+          .update({ status: "blocked", blocked_reason: reason })
+          .eq("id", step.id)
+          .eq("user_id", userId);
+        throw new Error(reason);
+      }
     }
 
     const { data: task, error: taskError } = await supabase
@@ -237,6 +360,9 @@ export const dispatchGoalStep = createServerFn({ method: "POST" })
         status: "incomplete",
         priority: step.risk === "high" ? "high" : "medium",
         requires_approval: step.requires_approval,
+        goal_id: step.goal_id,
+        goal_step_id: step.id,
+        required_capability_slug: step.required_capability_slug,
       })
       .select("id")
       .single();
