@@ -140,7 +140,7 @@ export const getEmployeeRoleProfile = createServerFn({ method: "GET" })
     ) {
       // No manually curated manager link yet: resolve the highest-authority
       // active manager hired in the SAME department, but only within this
-      // user's own roster (never crosses into another workspace's hires).
+      // user’s own roster (never crosses into another workspace’s hires).
       const { data: candidates } = await (supabase.from("user_subscriptions") as any)
         .select("id, status, employee:ai_employees(id, name, slug, role_title, department_slug, seniority_level, authority_level)")
         .eq("user_id", userId)
@@ -214,8 +214,8 @@ export const getEmployeeRoleProfile = createServerFn({ method: "GET" })
   });
 
 /** Read-only registry of what an AI employee CAN eventually do. Execution of
- *  most capabilities is intentionally not wired up yet (see PRODUCT_VISION.md);
- *  this only defines the architecture + which roles are allowed to hold them. */
+ * most capabilities is intentionally not wired up yet (see PRODUCT_VISION.md);
+ * this only defines the architecture + which roles are allowed to hold them. */
 export const listCapabilities = createServerFn({ method: "GET" }).handler(async () => {
   const { publicClient } = await import("./catalog.server");
   const { data, error } = await (publicClient().from("ai_capabilities") as any)
@@ -234,64 +234,30 @@ export const listCapabilities = createServerFn({ method: "GET" }).handler(async 
   })) as EmployeeCapability[];
 });
 
-export type CapabilityMatch = {
-  subscriptionId: string;
-  employeeId: string;
-  name: string;
-  slug: string;
-  roleTitle: string;
-  department: string | null;
-  seniorityLevel: string;
-  authorityLevel: number;
-  openTasks: number;
-};
+export type { DispatchCandidate as CapabilityMatch } from "./role-dispatch.server";
 
-/** Foundation for role-matching: given a capability, find this workspace's
- *  active hires who hold it, ranked by authority then by current workload.
- *  This is deliberately simple — it is the basic working function requested,
- *  not the full task-router (department/tools/permissions matching is the
- *  next phase once capability execution itself is built). */
+/** Role-matching endpoint used by the frontend: given a capability, find
+ * this workspace’s active hires who hold it, running the full real
+ * capability -> authority -> tool -> permission -> integration ->
+ * workload validation chain from role-dispatch.server.ts. Nothing here
+ * invents a match — unqualified holders are returned separately with the
+ * real reason they were rejected. */
 export const matchEmployeesForCapability = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => z.object({ capabilitySlug: z.string().min(1).max(120) }).parse(input))
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        capabilitySlug: z.string().min(1).max(120),
+        minAuthorityLevel: z.number().min(1).max(5).nullish(),
+      })
+      .parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-
-    const { data: subs, error } = await (supabase.from("user_subscriptions") as any)
-      .select(
-        "id, status, employee:ai_employees(id, name, slug, role_title, department, seniority_level, authority_level, capability_slugs)",
-      )
-      .eq("user_id", userId)
-      .eq("status", "active");
-
-    if (error) throw new Error(error.message);
-
-    const holders = ((subs ?? []) as { id: string; employee: CatalogRoleRow }[]).filter(
-      (s) => s.employee && (s.employee.capability_slugs ?? []).includes(data.capabilitySlug),
-    );
-
-    const withWorkload: CapabilityMatch[] = await Promise.all(
-      holders.map(async (s) => {
-        const { count } = await supabase
-          .from("ai_tasks")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", userId)
-          .eq("employee_id", s.employee.id)
-          .in("status", ["incomplete", "processing", "review"]);
-
-        return {
-          subscriptionId: s.id,
-          employeeId: s.employee.id,
-          name: s.employee.name,
-          slug: s.employee.slug,
-          roleTitle: s.employee.role_title,
-          department: s.employee.department,
-          seniorityLevel: s.employee.seniority_level,
-          authorityLevel: s.employee.authority_level,
-          openTasks: count ?? 0,
-        };
-      }),
-    );
-
-    return withWorkload.sort((a, b) => b.authorityLevel - a.authorityLevel || a.openTasks - b.openTasks);
+    const { matchCapabilityCandidates } = await import("./role-dispatch.server");
+    const result = await matchCapabilityCandidates(supabase, userId, {
+      capabilitySlug: data.capabilitySlug,
+      minAuthorityLevel: data.minAuthorityLevel ?? null,
+    });
+    return result.qualified;
   });
