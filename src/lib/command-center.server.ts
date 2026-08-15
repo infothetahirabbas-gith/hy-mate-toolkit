@@ -1,6 +1,15 @@
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/responses";
 const MODEL = "openai/gpt-5.6-sol";
 
+const SENIORITY_LEVELS = ["assistant", "specialist", "senior_specialist", "manager", "ai_manager"] as const;
+export const SENIORITY_AUTHORITY: Record<string, number> = {
+  assistant: 1,
+  specialist: 2,
+  senior_specialist: 3,
+  manager: 4,
+  ai_manager: 5,
+};
+
 export type PlannedStep = {
   title: string;
   detail: string;
@@ -10,6 +19,12 @@ export type PlannedStep = {
   risk: "low" | "medium" | "high";
   requiresApproval: boolean;
   expectedOutcome: string;
+  /** Real capability slug from ai_capabilities, or null when no capability
+   * in the registry covers this step yet. Always re-validated server-side
+   * against the real registry, the model never gets to invent one. */
+  requiredCapability: string | null;
+  minSeniorityLevel: (typeof SENIORITY_LEVELS)[number];
+  complexity: "simple" | "standard" | "complex";
 };
 
 export type GoalPlan = {
@@ -78,11 +93,14 @@ function extractJson(text: string): unknown {
 
 const INSTRUCTIONS = `You are the AI Chief of Staff of a company that runs an AI workforce.
 
-The human CEO gives you a business goal. You turn it into an execution plan that the company's
-existing AI employees can actually run.
+The human CEO gives you a business goal. You turn it into an execution plan that the
+existing AI employees at this company can actually run.
 
 Hard rules:
 - Only assign work to AI employees listed in ROSTER. Use their exact "slug". If no roster member fits a step, set employeeSlug to null and name the role that is missing in ownerRole.
+- If (and only if) a step matches one of the entries in CAPABILITIES, set requiredCapability to its exact slug. Never invent a capability slug that is not in that list, set it to null instead.
+- Set minSeniorityLevel to the lowest seniority (assistant, specialist, senior_specialist, manager, ai_manager) that could reasonably own this step. Default to specialist when unsure.
+- Set complexity to simple, standard, or complex based on how much real work the step requires.
 - Never claim work is already done. Every step is future work.
 - Mark any step that spends money, signs or commits externally, touches legal/medical/security matters, contacts customers at scale, or changes staffing as risk "high" and requiresApproval true.
 - Between 4 and 10 steps, ordered so each one is executable.
@@ -100,6 +118,9 @@ Reply with JSON only, in exactly this shape:
     "departmentSlug": "slug or null",
     "ownerRole": "job title that owns this",
     "employeeSlug": "roster slug or null",
+    "requiredCapability": "capability slug from CAPABILITIES, or null",
+    "minSeniorityLevel": "assistant|specialist|senior_specialist|manager|ai_manager",
+    "complexity": "simple|standard|complex",
     "risk": "low|medium|high",
     "requiresApproval": true,
     "expectedOutcome": "the deliverable"
@@ -116,6 +137,7 @@ export async function planGoal(input: {
   business: Record<string, unknown> | null;
   roster: { slug: string; name: string; role: string; department: string | null; skills: string[] }[];
   departments: { slug: string; name: string }[];
+  capabilities: { slug: string; name: string; departmentSlug: string | null }[];
 }): Promise<GoalPlan> {
   const apiKey = process.env["LOVABLE_API_KEY"];
   if (!apiKey) throw new Error("AI is not configured for this workspace yet.");
@@ -128,6 +150,7 @@ export async function planGoal(input: {
     `AUTONOMY LEVEL: ${input.autonomyLevel}`,
     `BUSINESS: ${JSON.stringify(input.business ?? {})}`,
     `DEPARTMENTS: ${JSON.stringify(input.departments)}`,
+    `CAPABILITIES: ${JSON.stringify(input.capabilities)}`,
     `ROSTER: ${JSON.stringify(input.roster)}`,
   ]
     .filter(Boolean)
@@ -158,6 +181,8 @@ export async function planGoal(input: {
 
   const raw = extractJson(await readStreamedText(response)) as Partial<GoalPlan>;
   const rosterSlugs = new Set(input.roster.map((r) => r.slug));
+  const capabilitySlugs = new Set(input.capabilities.map((c) => c.slug));
+  const seniorityLevels = new Set<string>(SENIORITY_LEVELS);
 
   const steps = (Array.isArray(raw.steps) ? raw.steps : []).slice(0, 12).map((step, index) => {
     const risk = step.risk === "high" || step.risk === "medium" ? step.risk : "low";
@@ -165,12 +190,25 @@ export async function planGoal(input: {
       typeof step.employeeSlug === "string" && rosterSlugs.has(step.employeeSlug)
         ? step.employeeSlug
         : null;
+    const requiredCapability =
+      typeof step.requiredCapability === "string" && capabilitySlugs.has(step.requiredCapability)
+        ? step.requiredCapability
+        : null;
+    const minSeniorityLevel =
+      typeof step.minSeniorityLevel === "string" && seniorityLevels.has(step.minSeniorityLevel)
+        ? (step.minSeniorityLevel as PlannedStep["minSeniorityLevel"])
+        : "specialist";
+    const complexity =
+      step.complexity === "simple" || step.complexity === "complex" ? step.complexity : "standard";
     return {
       title: String(step.title ?? `Step ${index + 1}`).slice(0, 160),
       detail: String(step.detail ?? "").slice(0, 2000),
       departmentSlug: typeof step.departmentSlug === "string" ? step.departmentSlug : null,
       ownerRole: String(step.ownerRole ?? "AI Specialist").slice(0, 120),
       employeeSlug,
+      requiredCapability,
+      minSeniorityLevel,
+      complexity,
       risk,
       requiresApproval: risk === "high" ? true : Boolean(step.requiresApproval),
       expectedOutcome: String(step.expectedOutcome ?? "").slice(0, 500),
