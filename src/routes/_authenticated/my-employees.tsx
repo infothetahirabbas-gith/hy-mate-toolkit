@@ -76,6 +76,11 @@ function MyEmployeesPage() {
               </div>
 
               <div className="flex flex-wrap gap-2">
+                <Button asChild size="sm" variant="outline">
+                  <Link to="/my-employees/$slug" params={{ slug: sub.employee.slug }}>
+                    View profile
+                  </Link>
+                </Button>
                 {sub.status === "active" ? (
                   <>
                     <Button asChild size="sm" variant="hero">
