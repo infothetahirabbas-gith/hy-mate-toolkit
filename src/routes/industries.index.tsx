@@ -14,7 +14,7 @@ export const Route = createFileRoute("/industries/")({
   },
   head: () => ({
     meta: [
-      { title: "AI Employees by Industry — 20 Industries, 100 Specialists" },
+      { title: "AI Employees by Industry — 50 Industries, 400 Specialists" },
       {
         name: "description",
         content:
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/industries/")({
       { property: "og:title", content: "AI Employees by Industry" },
       {
         property: "og:description",
-        content: "20 industries. 100 AI employees. Hire the specialist your business actually needs.",
+        content: "50 industries. 400 AI employees. Hire the specialist your business actually needs.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
