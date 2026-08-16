@@ -75,7 +75,7 @@ export function SiteHeader() {
           type="button"
           aria-label="Toggle menu"
           onClick={() => setOpen((v) => !v)}
-          className="ml-auto inline-flex size-10 items-center justify-center rounded-lg border border-border md:hidden"
+          className="ml-auto inline-flex size-10 items-center justify-center rounded-lg border border-border transition-colors hover:bg-secondary md:hidden"
         >
           {open ? <X className="size-4" /> : <Menu className="size-4" />}
         </button>
@@ -83,7 +83,7 @@ export function SiteHeader() {
 
       <div
         className={cn(
-          "overflow-hidden border-t border-border bg-background md:hidden",
+          "overflow-hidden border-t border-border bg-background transition-[max-height] duration-300 ease-in-out md:hidden",
           open ? "max-h-96" : "max-h-0 border-t-0",
         )}
       >
