@@ -213,7 +213,7 @@ function HomePage() {
           </div>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {STEPS.map((step, index) => (
-              <div key={step.title} className="rounded-2xl border border-border bg-card p-7 shadow-soft">
+              <div key={step.title} className="rounded-2xl border border-border bg-card p-7 shadow-soft hover-lift">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 items-center justify-center rounded-xl bg-secondary text-foreground">
                     <step.icon className="size-5" />
