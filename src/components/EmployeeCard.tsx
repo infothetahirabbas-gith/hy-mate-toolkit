@@ -21,14 +21,14 @@ export function EmployeeCard({ employee }: { employee: CatalogEmployee }) {
         />
         <div className="min-w-0">
           <h3 className="truncate text-lg font-bold">{employee.name}</h3>
-          <p className="truncate text-sm text-muted-foreground">{employee.role_title}</p>
+          <p className="line-clamp-2 text-sm text-muted-foreground">{employee.role_title}</p>
           {rating > 0 ? (
-            <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-              <Star className="size-3.5 fill-accent text-accent" />
+        <p className="mt-1 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+          <Star className="size-3.5 fill-accent text-accent" />
               <span className="font-semibold text-foreground">{rating.toFixed(1)}</span>
               <span>({reviews.length})</span>
               <span aria-hidden="true">·</span>
-              <span className="truncate">{employee.category}</span>
+              <span className="">{employee.category}</span>
             </p>
           ) : null}
         </div>
