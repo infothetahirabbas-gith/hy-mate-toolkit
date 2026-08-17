@@ -20,6 +20,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAnalyticsRouteImport } from './routes/_authenticated/analytics'
 import { Route as AuthenticatedBillingRouteImport } from './routes/_authenticated/billing'
 import { Route as AuthenticatedCommandCenterRouteImport } from './routes/_authenticated/command-center'
+import { Route as AuthenticatedCompanyBrainRouteImport } from './routes/_authenticated/company-brain'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedFinanceRouteImport } from './routes/_authenticated/finance'
 import { Route as AuthenticatedIntegrationsRouteImport } from './routes/_authenticated/integrations'
@@ -40,6 +41,7 @@ import { Route as EmployeesSlugRouteImport } from './routes/employees.$slug'
 import { Route as IndustriesIndexRouteImport } from './routes/industries.index'
 import { Route as IndustriesSlugRouteImport } from './routes/industries.$slug'
 import { Route as AuthenticatedActivateSlugRouteImport } from './routes/_authenticated/activate.$slug'
+import { Route as AuthenticatedMyEmployeesSlugRouteImport } from './routes/_authenticated/my-employees.$slug'
 import { Route as AuthenticatedWorkspaceSlugRouteImport } from './routes/_authenticated/workspace.$slug'
 
 const IndexRoute = IndexRouteImport.update({
@@ -95,6 +97,12 @@ const AuthenticatedCommandCenterRoute =
   AuthenticatedCommandCenterRouteImport.update({
     id: '/command-center',
     path: '/command-center',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCompanyBrainRoute =
+  AuthenticatedCompanyBrainRouteImport.update({
+    id: '/company-brain',
+    path: '/company-brain',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -201,6 +209,12 @@ const AuthenticatedActivateSlugRoute =
     path: '/activate/$slug',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedMyEmployeesSlugRoute =
+  AuthenticatedMyEmployeesSlugRouteImport.update({
+    id: '/$slug',
+    path: '/$slug',
+    getParentRoute: () => AuthenticatedMyEmployeesRoute,
+  } as any)
 const AuthenticatedWorkspaceSlugRoute =
   AuthenticatedWorkspaceSlugRouteImport.update({
     id: '/workspace/$slug',
@@ -219,12 +233,13 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/billing': typeof AuthenticatedBillingRoute
   '/command-center': typeof AuthenticatedCommandCenterRoute
+  '/company-brain': typeof AuthenticatedCompanyBrainRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/finance': typeof AuthenticatedFinanceRoute
   '/integrations': typeof AuthenticatedIntegrationsRoute
   '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/memory': typeof AuthenticatedMemoryRoute
-  '/my-employees': typeof AuthenticatedMyEmployeesRoute
+  '/my-employees': typeof AuthenticatedMyEmployeesRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/performance': typeof AuthenticatedPerformanceRoute
   '/reports': typeof AuthenticatedReportsRoute
@@ -239,6 +254,7 @@ export interface FileRoutesByFullPath {
   '/departments/': typeof DepartmentsIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/activate/$slug': typeof AuthenticatedActivateSlugRoute
+  '/my-employees/$slug': typeof AuthenticatedMyEmployeesSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesByTo {
@@ -252,12 +268,13 @@ export interface FileRoutesByTo {
   '/analytics': typeof AuthenticatedAnalyticsRoute
   '/billing': typeof AuthenticatedBillingRoute
   '/command-center': typeof AuthenticatedCommandCenterRoute
+  '/company-brain': typeof AuthenticatedCompanyBrainRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/finance': typeof AuthenticatedFinanceRoute
   '/integrations': typeof AuthenticatedIntegrationsRoute
   '/knowledge': typeof AuthenticatedKnowledgeRoute
   '/memory': typeof AuthenticatedMemoryRoute
-  '/my-employees': typeof AuthenticatedMyEmployeesRoute
+  '/my-employees': typeof AuthenticatedMyEmployeesRouteWithChildren
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/performance': typeof AuthenticatedPerformanceRoute
   '/reports': typeof AuthenticatedReportsRoute
@@ -272,6 +289,7 @@ export interface FileRoutesByTo {
   '/departments': typeof DepartmentsIndexRoute
   '/industries': typeof IndustriesIndexRoute
   '/activate/$slug': typeof AuthenticatedActivateSlugRoute
+  '/my-employees/$slug': typeof AuthenticatedMyEmployeesSlugRoute
   '/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRoutesById {
@@ -287,12 +305,13 @@ export interface FileRoutesById {
   '/_authenticated/analytics': typeof AuthenticatedAnalyticsRoute
   '/_authenticated/billing': typeof AuthenticatedBillingRoute
   '/_authenticated/command-center': typeof AuthenticatedCommandCenterRoute
+  '/_authenticated/company-brain': typeof AuthenticatedCompanyBrainRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/finance': typeof AuthenticatedFinanceRoute
   '/_authenticated/integrations': typeof AuthenticatedIntegrationsRoute
   '/_authenticated/knowledge': typeof AuthenticatedKnowledgeRoute
   '/_authenticated/memory': typeof AuthenticatedMemoryRoute
-  '/_authenticated/my-employees': typeof AuthenticatedMyEmployeesRoute
+  '/_authenticated/my-employees': typeof AuthenticatedMyEmployeesRouteWithChildren
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/performance': typeof AuthenticatedPerformanceRoute
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
@@ -307,6 +326,7 @@ export interface FileRoutesById {
   '/departments/': typeof DepartmentsIndexRoute
   '/industries/': typeof IndustriesIndexRoute
   '/_authenticated/activate/$slug': typeof AuthenticatedActivateSlugRoute
+  '/_authenticated/my-employees/$slug': typeof AuthenticatedMyEmployeesSlugRoute
   '/_authenticated/workspace/$slug': typeof AuthenticatedWorkspaceSlugRoute
 }
 export interface FileRouteTypes {
@@ -322,6 +342,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/billing'
     | '/command-center'
+    | '/company-brain'
     | '/dashboard'
     | '/finance'
     | '/integrations'
@@ -342,6 +363,7 @@ export interface FileRouteTypes {
     | '/departments/'
     | '/industries/'
     | '/activate/$slug'
+    | '/my-employees/$slug'
     | '/workspace/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -355,6 +377,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/billing'
     | '/command-center'
+    | '/company-brain'
     | '/dashboard'
     | '/finance'
     | '/integrations'
@@ -375,6 +398,7 @@ export interface FileRouteTypes {
     | '/departments'
     | '/industries'
     | '/activate/$slug'
+    | '/my-employees/$slug'
     | '/workspace/$slug'
   id:
     | '__root__'
@@ -389,6 +413,7 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics'
     | '/_authenticated/billing'
     | '/_authenticated/command-center'
+    | '/_authenticated/company-brain'
     | '/_authenticated/dashboard'
     | '/_authenticated/finance'
     | '/_authenticated/integrations'
@@ -409,6 +434,7 @@ export interface FileRouteTypes {
     | '/departments/'
     | '/industries/'
     | '/_authenticated/activate/$slug'
+    | '/_authenticated/my-employees/$slug'
     | '/_authenticated/workspace/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -504,6 +530,13 @@ declare module '@tanstack/react-router' {
       path: '/command-center'
       fullPath: '/command-center'
       preLoaderRoute: typeof AuthenticatedCommandCenterRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/company-brain': {
+      id: '/_authenticated/company-brain'
+      path: '/company-brain'
+      fullPath: '/company-brain'
+      preLoaderRoute: typeof AuthenticatedCompanyBrainRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -646,6 +679,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedActivateSlugRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/my-employees/$slug': {
+      id: '/_authenticated/my-employees/$slug'
+      path: '/$slug'
+      fullPath: '/my-employees/$slug'
+      preLoaderRoute: typeof AuthenticatedMyEmployeesSlugRouteImport
+      parentRoute: typeof AuthenticatedMyEmployeesRoute
+    }
     '/_authenticated/workspace/$slug': {
       id: '/_authenticated/workspace/$slug'
       path: '/workspace/$slug'
@@ -656,17 +696,32 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedMyEmployeesRouteChildren {
+  AuthenticatedMyEmployeesSlugRoute: typeof AuthenticatedMyEmployeesSlugRoute
+}
+
+const AuthenticatedMyEmployeesRouteChildren: AuthenticatedMyEmployeesRouteChildren =
+  {
+    AuthenticatedMyEmployeesSlugRoute: AuthenticatedMyEmployeesSlugRoute,
+  }
+
+const AuthenticatedMyEmployeesRouteWithChildren =
+  AuthenticatedMyEmployeesRoute._addFileChildren(
+    AuthenticatedMyEmployeesRouteChildren,
+  )
+
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAnalyticsRoute: typeof AuthenticatedAnalyticsRoute
   AuthenticatedBillingRoute: typeof AuthenticatedBillingRoute
   AuthenticatedCommandCenterRoute: typeof AuthenticatedCommandCenterRoute
+  AuthenticatedCompanyBrainRoute: typeof AuthenticatedCompanyBrainRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedFinanceRoute: typeof AuthenticatedFinanceRoute
   AuthenticatedIntegrationsRoute: typeof AuthenticatedIntegrationsRoute
   AuthenticatedKnowledgeRoute: typeof AuthenticatedKnowledgeRoute
   AuthenticatedMemoryRoute: typeof AuthenticatedMemoryRoute
-  AuthenticatedMyEmployeesRoute: typeof AuthenticatedMyEmployeesRoute
+  AuthenticatedMyEmployeesRoute: typeof AuthenticatedMyEmployeesRouteWithChildren
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedPerformanceRoute: typeof AuthenticatedPerformanceRoute
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
@@ -684,12 +739,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsRoute: AuthenticatedAnalyticsRoute,
   AuthenticatedBillingRoute: AuthenticatedBillingRoute,
   AuthenticatedCommandCenterRoute: AuthenticatedCommandCenterRoute,
+  AuthenticatedCompanyBrainRoute: AuthenticatedCompanyBrainRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedFinanceRoute: AuthenticatedFinanceRoute,
   AuthenticatedIntegrationsRoute: AuthenticatedIntegrationsRoute,
   AuthenticatedKnowledgeRoute: AuthenticatedKnowledgeRoute,
   AuthenticatedMemoryRoute: AuthenticatedMemoryRoute,
-  AuthenticatedMyEmployeesRoute: AuthenticatedMyEmployeesRoute,
+  AuthenticatedMyEmployeesRoute: AuthenticatedMyEmployeesRouteWithChildren,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedPerformanceRoute: AuthenticatedPerformanceRoute,
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
